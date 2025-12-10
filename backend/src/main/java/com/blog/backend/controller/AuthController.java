@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.blog.backend.dto.LoginRequestDTO;
 import com.blog.backend.dto.UserRequestDTO;
 import com.blog.backend.dto.UserResponseDTO;
 import com.blog.backend.entity.User;
@@ -22,10 +23,16 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
-        UserResponseDTO savedUser = userService.createUser(dto);
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRequestDTO dto) {
+        UserResponseDTO savedUser = userService.register(dto);
         return ResponseEntity.ok(savedUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO dto) {
+        User user = userService.login(dto);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping
