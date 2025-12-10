@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.blog.backend.dto.UserRequestDTO;
+import com.blog.backend.dto.UserResponseDTO;
 import com.blog.backend.entity.User;
 import com.blog.backend.service.AuthService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,13 +23,9 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserRequestDTO dto) {
-        try {
-            User savedUser = userService.createUser(dto);
-            return ResponseEntity.ok(savedUser);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
+        UserResponseDTO savedUser = userService.createUser(dto);
+        return ResponseEntity.ok(savedUser);
     }
 
     @GetMapping
