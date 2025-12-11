@@ -1,42 +1,31 @@
 package com.blog.backend.controller;
 
-import java.util.List;
-
+import com.blog.backend.dto.LoginRequestDTO;
+import com.blog.backend.dto.UserRequestDTO;
+import com.blog.backend.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.blog.backend.dto.LoginRequestDTO;
-import com.blog.backend.dto.UserRequestDTO;
-import com.blog.backend.dto.UserResponseDTO;
-import com.blog.backend.entity.User;
-import com.blog.backend.service.AuthService;
-
-import jakarta.validation.Valid;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthService userService;
+    private final AuthService authService;
 
-    public AuthController(AuthService userService) {
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRequestDTO dto) {
-        UserResponseDTO savedUser = userService.register(dto);
-        return ResponseEntity.ok(savedUser);
+    public ResponseEntity<?> register(@RequestBody UserRequestDTO dto) {
+        return ResponseEntity.ok(authService.register(dto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO dto) {
-        User user = userService.login(dto);
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO dto) {
+        String token = authService.login(dto);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.blog.backend.config.JwtUtil;
 import com.blog.backend.dto.LoginRequestDTO;
 import com.blog.backend.dto.UserRequestDTO;
 import com.blog.backend.dto.UserResponseDTO;
@@ -16,11 +17,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bcrypt;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository,
-            BCryptPasswordEncoder encoder) {
+    public AuthService(UserRepository userRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.bcrypt = encoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public UserResponseDTO register(UserRequestDTO dto) {
@@ -50,7 +52,7 @@ public class AuthService {
         return res;
     }
 
-    public User login(LoginRequestDTO dto) {
+    public String login(LoginRequestDTO dto) {
 
         User user;
 
@@ -64,7 +66,7 @@ public class AuthService {
             throw new RuntimeException("Invalid email or password");
         }
 
-        return user;
+        return jwtUtil.generateToken(user);
     }
 
     public List<User> getAllUsers() {
