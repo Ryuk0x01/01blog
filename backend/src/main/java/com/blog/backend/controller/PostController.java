@@ -1,13 +1,17 @@
 package com.blog.backend.controller;
 
+import com.blog.backend.dto.PostRequestDTO;
 import com.blog.backend.dto.PostResponseDTO;
-import com.blog.backend.entity.Post;
 import com.blog.backend.service.PostService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -20,31 +24,39 @@ public class PostController {
     }
 
     // Create Post → USER/Admin
-    @PostMapping
-    public ResponseEntity<PostResponseDTO> createPost(@RequestBody Post post, Authentication auth) {
+    @PostMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<?> createPost(
+            @Valid PostRequestDTO dto,
+            Authentication auth) throws Exception {
         String email = (String) auth.getPrincipal();
-        PostResponseDTO created = postService.createPost(post.getTitle(), post.getContent(), email);
-        return ResponseEntity.ok(created);
+        PostResponseDTO created = postService.createPost(dto, email);
+        return ResponseEntity.ok(Map.of("status", "success", "data", created));
     }
 
     // Get all posts → public
     @GetMapping
-    public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<?> getAllPosts() {
+        List<PostResponseDTO> posts = postService.getAllPosts();
+        return ResponseEntity.ok(Map.of("status", "success", "data", posts));
     }
 
     // Get single post → public
-    @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDTO> getPost(@PathVariable Long id) {
-        return ResponseEntity.ok(postService.getPostByIdDTO(id));
+     @GetMapping("/{id}")
+    public ResponseEntity<?> getPost(@PathVariable Long id) {
+        PostResponseDTO post = postService.getPostByIdDTO(id);
+        return ResponseEntity.ok(Map.of("status", "success", "data", post));
     }
 
     // Update post only author
-    @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post, Authentication auth) {
+    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> updatePost(
+            @PathVariable Long id,
+            @Valid PostRequestDTO dto,
+            Authentication auth
+    ) throws Exception {
         String email = (String) auth.getPrincipal();
-        Post updated = postService.updatePost(id, post.getTitle(), post.getContent(), email);
-        return ResponseEntity.ok(updated);
+        PostResponseDTO updated = postService.updatePost(id, dto, email);
+        return ResponseEntity.ok(Map.of("status", "success", "data", updated));
     }
 
     // Delete post → author or admin
@@ -53,6 +65,6 @@ public class PostController {
         String email = (String) auth.getPrincipal();
         String role = auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
         postService.deletePost(id, email, role);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("status", "success"));
     }
 }

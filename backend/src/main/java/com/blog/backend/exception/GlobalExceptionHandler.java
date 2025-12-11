@@ -2,34 +2,45 @@ package com.blog.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Validation errors (@Valid)
+    // Validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
-
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-
-        return ResponseEntity.badRequest().body(errors);
+        ex.getBindingResult().getFieldErrors().forEach(error -> 
+            errors.put(error.getField(), error.getDefaultMessage())
+        );
+        return new ResponseEntity<>(Map.of(
+            "status", "error",
+            "errors", errors
+        ), HttpStatus.BAD_REQUEST);
     }
 
-    // Business errors (Email already exists)
+    // Runtime / custom exceptions
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> handleBusiness(RuntimeException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(Map.of(
+            "status", "error",
+            "message", ex.getMessage()
+        ), HttpStatus.BAD_REQUEST);
+    }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    // AccessDeniedException
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
+        return new ResponseEntity<>(Map.of(
+            "status", "error",
+            "message", "You are not authorized"
+        ), HttpStatus.FORBIDDEN);
     }
 }

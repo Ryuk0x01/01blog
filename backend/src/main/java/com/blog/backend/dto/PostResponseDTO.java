@@ -13,6 +13,7 @@ public class PostResponseDTO {
     private String title;
     private String content;
     private String authorUsername;
+    private String mediaUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

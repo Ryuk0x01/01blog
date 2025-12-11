@@ -28,6 +28,9 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @Column
+    private String mediaUrl;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
