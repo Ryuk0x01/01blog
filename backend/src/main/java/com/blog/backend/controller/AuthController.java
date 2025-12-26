@@ -1,7 +1,7 @@
 package com.blog.backend.controller;
 
 import com.blog.backend.dto.LoginRequestDTO;
-import com.blog.backend.dto.UserRequestDTO;
+import com.blog.backend.dto.RegisterRequestDTO;
 import com.blog.backend.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRequestDTO dto) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO dto) {
         return ResponseEntity.ok(authService.register(dto));
     }
 

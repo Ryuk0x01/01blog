@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.blog.backend.config.JwtUtil;
 import com.blog.backend.dto.LoginRequestDTO;
-import com.blog.backend.dto.UserRequestDTO;
-import com.blog.backend.dto.UserResponseDTO;
+import com.blog.backend.dto.RegisterRequestDTO;
+import com.blog.backend.dto.RegisterResponseDTO;
 import com.blog.backend.entity.User;
 import com.blog.backend.repository.UserRepository;
 
@@ -25,7 +25,7 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    public UserResponseDTO register(UserRequestDTO dto) {
+    public RegisterResponseDTO register(RegisterRequestDTO dto) {
 
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Email already exists");
@@ -43,7 +43,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        UserResponseDTO res = new UserResponseDTO();
+        RegisterResponseDTO res = new RegisterResponseDTO();
         res.setId(savedUser.getId());
         res.setUsername(savedUser.getUsername());
         res.setEmail(savedUser.getEmail());
