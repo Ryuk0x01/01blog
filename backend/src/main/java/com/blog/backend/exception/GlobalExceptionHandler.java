@@ -16,26 +16,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return new ResponseEntity<>(Map.of(
-            "status", "error",
-            "message", ex.getMessage()
-        ), HttpStatus.BAD_REQUEST);
+                "status", "error",
+                "message", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     // Runtime / custom exceptions
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
         return new ResponseEntity<>(Map.of(
-            "status", "error",
-            "message", ex.getMessage()
-        ), HttpStatus.BAD_REQUEST);
+                "status", "error",
+                "message", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     // AccessDeniedException
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
         return new ResponseEntity<>(Map.of(
-            "status", "error",
-            "message", "You are not authorized"
-        ), HttpStatus.FORBIDDEN);
+                "status", "error",
+                "message", "You are not authorized"), HttpStatus.FORBIDDEN);
     }
 }
