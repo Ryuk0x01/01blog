@@ -29,8 +29,7 @@ public class PostService {
     }
 
     // Create post → any user
-    public PostResponseDTO createPost(PostRequestDTO dto, String userEmail)
-            throws Exception {
+    public PostResponseDTO createPost(PostRequestDTO dto, String userEmail) throws Exception {
         User author = userRepository.findByEmail(userEmail);
         if (author == null) throw new RuntimeException("User not found");
         Post post = new Post();
@@ -72,8 +71,7 @@ public class PostService {
     }
 
     // Update post → only author
-    public PostResponseDTO updatePost(Long id, PostRequestDTO dto, String userEmail)
-            throws Exception {
+    public PostResponseDTO updatePost(Long id, PostRequestDTO dto, String userEmail) throws Exception {
         Post post = getPostById(id);
         // check if author
         if (!post.getAuthor().getEmail().equals(userEmail)) {

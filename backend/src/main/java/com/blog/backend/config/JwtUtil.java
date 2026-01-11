@@ -21,9 +21,6 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    // ------------------------------
-    // Generate JWT
-    // ------------------------------
     public String generateToken(User user) {
 
         Map<String, Object> claims = new HashMap<>();
@@ -39,23 +36,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ------------------------------
-    // Extract Email
-    // ------------------------------
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // ------------------------------
-    // Extract Role
-    // ------------------------------
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
     }
 
-    // ------------------------------
-    // Validate Token
-    // ------------------------------
     public boolean validateToken(String token) {
         try {
             extractAllClaims(token);
@@ -65,9 +53,6 @@ public class JwtUtil {
         }
     }
 
-    // ------------------------------
-    // Parse Token
-    // ------------------------------
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
