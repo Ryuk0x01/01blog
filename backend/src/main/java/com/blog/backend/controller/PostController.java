@@ -7,6 +7,7 @@ import com.blog.backend.service.PostService;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +24,10 @@ public class PostController {
         this.postService = postService;
     }
 
-    // Create Post → USER/Admin
+    // Create Post → USERS/Admin
     @PostMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<?> createPost(
-            @Valid PostRequestDTO dto,
-            Authentication auth) throws Exception {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<?> createPost(@Valid PostRequestDTO dto, Authentication auth) throws Exception {
         String email = (String) auth.getPrincipal();
         PostResponseDTO created = postService.createPost(dto, email);
         return ResponseEntity.ok(Map.of("status", "success", "data", created));
@@ -35,25 +35,27 @@ public class PostController {
 
     // Get all posts → public
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> getAllPosts() {
         List<PostResponseDTO> posts = postService.getAllPosts();
         return ResponseEntity.ok(Map.of("status", "success", "data", posts));
     }
 
     // Get single post → public
-     @GetMapping("/{id}")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
         PostResponseDTO post = postService.getPostByIdDTO(id);
         return ResponseEntity.ok(Map.of("status", "success", "data", post));
     }
 
     // Update post only author
-    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
+    @PutMapping(value = "/{id}", consumes = { "multipart/form-data" })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
             @Valid PostRequestDTO dto,
-            Authentication auth
-    ) throws Exception {
+            Authentication auth) throws Exception {
         String email = (String) auth.getPrincipal();
         PostResponseDTO updated = postService.updatePost(id, dto, email);
         return ResponseEntity.ok(Map.of("status", "success", "data", updated));
@@ -61,9 +63,11 @@ public class PostController {
 
     // Delete post → author or admin
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> deletePost(@PathVariable Long id, Authentication auth) {
         String email = (String) auth.getPrincipal();
         String role = auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
+        // System.out.println("---------------------------------------------------------->" + role);
         postService.deletePost(id, email, role);
         return ResponseEntity.ok(Map.of("status", "success"));
     }

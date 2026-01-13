@@ -19,7 +19,4 @@ public class PostRequestDTO {
     private String content;
 
     private MultipartFile file;
-
-    // optional media URL (image or video)
-    private String mediaUrl;
 }

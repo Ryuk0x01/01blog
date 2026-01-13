@@ -20,6 +20,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final long MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
     private final String uploadDir = "uploads/";
 
@@ -31,7 +32,8 @@ public class PostService {
     // Create post → any user
     public PostResponseDTO createPost(PostRequestDTO dto, String userEmail) throws Exception {
         User author = userRepository.findByEmail(userEmail);
-        if (author == null) throw new RuntimeException("User not found");
+        if (author == null)
+            throw new RuntimeException("User not found");
         Post post = new Post();
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -39,7 +41,17 @@ public class PostService {
 
         MultipartFile file = dto.getFile();
         if (file != null && !file.isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+            if (file.getSize() > MAX_SIZE) {
+                throw new RuntimeException("File too large. Max 10MB allowed.");
+            }
+
+            String original = file.getOriginalFilename();
+            if (original == null || !original.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif|mp4|avi|mov)$")) {
+                throw new RuntimeException("Invalid file extension");
+            }
+
+            String fileName = System.currentTimeMillis() + "_" + original;
             Path filePath = Paths.get(uploadDir + fileName);
             Files.createDirectories(filePath.getParent());
             file.transferTo(filePath);
@@ -84,7 +96,17 @@ public class PostService {
         // handle file
         MultipartFile file = dto.getFile();
         if (file != null && !file.isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+            if (file.getSize() > MAX_SIZE) {
+                throw new RuntimeException("File too large. Max 10MB allowed.");
+            }
+
+            String original = file.getOriginalFilename();
+            if (original == null || !original.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif|mp4|avi|mov)$")) {
+                throw new RuntimeException("Invalid file extension");
+            }
+
+            String fileName = System.currentTimeMillis() + "_" + original;
             Path filePath = Paths.get(uploadDir + fileName);
             Files.createDirectories(filePath.getParent());
             file.transferTo(filePath);
