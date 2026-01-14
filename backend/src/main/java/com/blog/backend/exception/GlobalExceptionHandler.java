@@ -35,4 +35,5 @@ public class GlobalExceptionHandler {
                 "status", "error",
                 "message", "You are not authorized"), HttpStatus.FORBIDDEN);
     }
+
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -34,6 +35,9 @@ public class Post {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -42,7 +46,6 @@ public class Post {
 
     @PreUpdate
     protected void onUpdate() {
-        
         updatedAt = LocalDateTime.now();
     }
 }

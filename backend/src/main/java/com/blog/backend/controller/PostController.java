@@ -16,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class PostController {
 
     private final PostService postService;
@@ -26,7 +27,6 @@ public class PostController {
 
     // Create Post → USERS/Admin
     @PostMapping(consumes = { "multipart/form-data" })
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> createPost(@Valid PostRequestDTO dto, Authentication auth) throws Exception {
         String email = (String) auth.getPrincipal();
         PostResponseDTO created = postService.createPost(dto, email);
@@ -35,7 +35,6 @@ public class PostController {
 
     // Get all posts → public
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> getAllPosts() {
         List<PostResponseDTO> posts = postService.getAllPosts();
         return ResponseEntity.ok(Map.of("status", "success", "data", posts));
@@ -43,7 +42,6 @@ public class PostController {
 
     // Get single post → public
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
         PostResponseDTO post = postService.getPostByIdDTO(id);
         return ResponseEntity.ok(Map.of("status", "success", "data", post));
@@ -51,7 +49,6 @@ public class PostController {
 
     // Update post only author
     @PutMapping(value = "/{id}", consumes = { "multipart/form-data" })
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
             @Valid PostRequestDTO dto,
@@ -63,11 +60,9 @@ public class PostController {
 
     // Delete post → author or admin
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> deletePost(@PathVariable Long id, Authentication auth) {
         String email = (String) auth.getPrincipal();
         String role = auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-        // System.out.println("---------------------------------------------------------->" + role);
         postService.deletePost(id, email, role);
         return ResponseEntity.ok(Map.of("status", "success"));
     }

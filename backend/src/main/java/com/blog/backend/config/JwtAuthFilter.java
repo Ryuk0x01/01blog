@@ -27,7 +27,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     public boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.equals("/api/auth/login") || path.equals("/api/auth/register");
+        return !path.startsWith("/api/") || path.startsWith("/api/auth/");
     }
 
     @Override
@@ -59,7 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(auth);
         } else {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"status\":\"error\",\"message\":\"JWT is missing or invalid\"}");
             return;
