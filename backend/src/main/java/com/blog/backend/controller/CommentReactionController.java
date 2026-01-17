@@ -3,6 +3,7 @@ package com.blog.backend.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.blog.backend.service.CommentReactionService;
 
 @RestController
 @RequestMapping("/api/comments")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class CommentReactionController {
 
     private final CommentReactionService reactionService;

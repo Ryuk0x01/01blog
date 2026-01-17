@@ -1,10 +1,14 @@
 package com.blog.backend.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,4 +38,10 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.REMOVE)
+    private List<UserFollow> followers;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE)
+    private List<UserFollow> following;
 }
