@@ -7,7 +7,6 @@ import com.blog.backend.service.PostService;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
-@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class PostController {
 
     private final PostService postService;

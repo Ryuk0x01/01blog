@@ -6,7 +6,6 @@ import com.blog.backend.repository.PostReactionRepository;
 import com.blog.backend.repository.PostRepository;
 import com.blog.backend.service.PostReactionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
-@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class PostReactionController {
 
     private final PostReactionService reactionService;

@@ -3,7 +3,6 @@ package com.blog.backend.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +14,6 @@ import com.blog.backend.service.FollowService;
 
 @RestController
 @RequestMapping("/api/users")
-@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class FollowController {
 
     private final FollowService followService;
@@ -25,16 +23,14 @@ public class FollowController {
     }
 
     @PostMapping("/{id}/follow")
-    public ResponseEntity<?> follow(@PathVariable Long id,
-                                    Authentication auth) {
+    public ResponseEntity<?> follow(@PathVariable Long id, Authentication auth) {
 
         followService.follow(id, auth.getName());
         return ResponseEntity.ok(Map.of("message", "followed"));
     }
 
     @DeleteMapping("/{id}/unfollow")
-    public ResponseEntity<?> unfollow(@PathVariable Long id,
-                                      Authentication auth) {
+    public ResponseEntity<?> unfollow(@PathVariable Long id, Authentication auth) {
 
         followService.unfollow(id, auth.getName());
         return ResponseEntity.ok(Map.of("message", "unfollowed"));
