@@ -28,7 +28,6 @@ public class ProfileService {
         Long postsCount = postRepository.countByAuthor(profileUser);
         Long followerCount = userFollowRepository.countByFollower(profileUser);
         Long followingCount = userFollowRepository.countByFollowing(profileUser);
-
         boolean isFollowing = false;
 
         if (viewerEmail != null) {
