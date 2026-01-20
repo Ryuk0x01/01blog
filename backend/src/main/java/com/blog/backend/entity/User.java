@@ -44,4 +44,7 @@ public class User {
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE)
     private List<UserFollow> following;
+
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.REMOVE)
+    private List<Report> reports;
 }
