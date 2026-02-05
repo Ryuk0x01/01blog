@@ -39,4 +39,10 @@ export class Register {
       });
   }
 
+  ngOnInit() {
+    if (this.auth.getToken()) {
+      this.router.navigate(['/home']);
+    }
+  }
+
 }

@@ -1,0 +1,91 @@
+/* Bootstrap-friendly, polished styles for Home component */
+
+/* Page background and spacing */
+.container-fluid.py-4 {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 60%);
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+/* Cards: subtle rounded look with smooth hover lift */
+.card.shadow-sm {
+  border: none;
+  border-radius: 0.75rem;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  overflow: hidden;
+}
+.card.shadow-sm:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(20, 35, 80, 0.08);
+}
+
+/* Profile card */
+.card .card-body h5 {
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+}
+.card .card-body p.card-text {
+  color: #475569;
+}
+
+/* Post cards */
+.card.mb-3.shadow-sm .card-body {
+  padding: 1.1rem 1rem;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+.card-subtitle.text-muted {
+  color: #64748b !important;
+  font-size: 0.9rem;
+}
+.card-text {
+  color: #334155;
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+  max-height: 7.5rem;
+  overflow: hidden;
+}
+
+/* Buttons: rounded with subtle hover */
+.btn {
+  border-radius: 0.55rem;
+  box-shadow: none;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-sm { padding: 0.38rem 0.6rem; }
+
+/* Alerts */
+.alert-danger {
+  background: linear-gradient(90deg, #fff6f6, #fff2f2);
+  border: 1px solid #ffd6d6;
+  color: #7a1b1b;
+}
+
+/* Utility tweaks */
+.text-muted { color: #6b7280 !important; }
+.d-flex.gap-2 > .btn { margin-right: 0.25rem; }
+
+/* Responsive: tighten spacing on small screens */
+@media (max-width: 768px) {
+  .container-fluid.py-4 { padding-left: 0.9rem; padding-right: 0.9rem; }
+  .card.mb-3.shadow-sm { margin-bottom: 1rem; }
+}
+
+/* Small visual accent for author name */
+.card-subtitle .author {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Minor accessibility focus state */
+.btn:focus { box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12); outline: none; }
+
+/* Keep layout consistent with Bootstrap utilities already used in template */
+.mb-3 { margin-bottom: 1rem !important; }
+
+/* End of custom home styles */

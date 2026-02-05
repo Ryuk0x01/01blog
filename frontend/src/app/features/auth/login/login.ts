@@ -21,13 +21,19 @@ export class Login {
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: (res: any) => {
         this.auth.setToken(res.token);
-        // this.router.navigate(['/posts']);
         console.log(res.token);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         console.log("Error : ", err);
         alert('Login failed')
       }
     });
+  }
+
+  ngOnInit() {
+    if (this.auth.getToken()) {
+      this.router.navigate(['/home']);
+    }
   }
 }
