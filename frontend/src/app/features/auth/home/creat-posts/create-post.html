@@ -1,0 +1,47 @@
+ <!-- Create Post Card -->
+  <mat-card class="create-post-card">
+    <mat-card-header>
+      <mat-card-title>Create New Post</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="createPost()" class="post-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Post title</mat-label>
+          <input matInput type="text" placeholder="Post title..." [(ngModel)]="newPostTitle" name="title"
+            [disabled]="creatingPost()">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>What's on your mind?</mat-label>
+          <textarea matInput rows="3" placeholder="What's on your mind?" [(ngModel)]="newPostContent"
+            name="content" [disabled]="creatingPost()"></textarea>
+        </mat-form-field>
+
+        <!-- File Input -->
+        <div class="file-input-wrapper">
+          <input type="file" #fileInput class="file-input" id="fileInput" (change)="onFileSelected($event)"
+            accept="image/*,video/*" [disabled]="creatingPost()">
+          <button mat-raised-button type="button" color="primary" (click)="fileInput.click()"
+            [disabled]="creatingPost()">
+            <mat-icon>attach_file</mat-icon>
+            Choose Image/Video
+          </button>
+        </div>
+
+        <!-- Selected File Display -->
+        @if (selectedFile()) {
+        <div class="selected-file-alert">
+          <span>📁 {{ selectedFile()!.name }} ({{ (selectedFile()!.size / 1024 / 1024).toFixed(2) }}MB)</span>
+          <button mat-icon-button (click)="selectedFile.set(null)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        }
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="creatingPost()">
+          <mat-icon>{{ creatingPost() ? 'hourglass_empty' : 'publish' }}</mat-icon>
+          {{ creatingPost() ? 'Publishing...' : 'Publish' }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>

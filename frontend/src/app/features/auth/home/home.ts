@@ -1,9 +1,16 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth';
+import { CreatePostComponent } from "./creat-posts/create-post";
 
 interface Post {
   id: number;
@@ -26,13 +33,13 @@ interface Profile {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, CreatePostComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
 export class HomeComponent {
-
   posts = signal<Post[]>([]);
+  showCreatePost = signal(false);
   loadingPosts = signal(false);
   errorMessage = signal('');
   selectedProfile = signal<Profile | null>(null);
@@ -49,7 +56,7 @@ export class HomeComponent {
 
   private postsApi = 'http://localhost:8080/api/posts';
   private postReactionApi = 'http://localhost:8080/api/posts';
-  private commentApi = 'http://localhost:8080/api/comments';
+
 
   constructor(
     private auth: AuthService,
@@ -170,5 +177,10 @@ export class HomeComponent {
       this.selectedFile.set(file);
       this.errorMessage.set('');
     }
+  }
+
+  handlePostCreated(formData: FormData): void {
+    this.showCreatePost.set(false);
+    this.loadPosts();
   }
 }

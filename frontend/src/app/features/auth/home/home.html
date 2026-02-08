@@ -1,94 +1,81 @@
-<div class="container-fluid py-4">
+<div class="home-container">
 
   <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">🏠 Home</h2>
-    <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+  <div class="home-header">
+    <h1>🏠 Home</h1>
+    <button mat-stroked-button color="primary" (click)="showCreatePost.set(!showCreatePost())">
+      Create Post
+    </button>
   </div>
 
   <!-- Error message -->
   @if (errorMessage()) {
-  <div class="alert alert-danger">
+  <div class="error-alert">
     {{ errorMessage() }}
   </div>
   }
 
   @if (loadingPosts()) {
-  <div class="text-muted mb-3">
-    Loading posts...
+  <div class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading posts...</p>
   </div>
   }
 
-  <!-- Create Post Form -->
-  <div class="card mb-4 shadow-sm">
-    <div class="card-body">
-      <h5 class="card-title">Create New Post</h5>
-      <form (ngSubmit)="createPost()" class="d-flex flex-column gap-2">
-        <input type="text" class="form-control" placeholder="Post title..." [(ngModel)]="newPostTitle" name="title"
-          [disabled]="creatingPost()">
-        <textarea class="form-control" rows="3" placeholder="What's on your mind?" [(ngModel)]="newPostContent"
-          name="content" [disabled]="creatingPost()"></textarea>
+  @if (showCreatePost()) {
+  <app-create-post (postCreated)="handlePostCreated($event)"></app-create-post>
+  }
 
-        <!-- File Input -->
-        <div class="input-group">
-          <input type="file" class="form-control" id="fileInput" (change)="onFileSelected($event)"
-            accept="image/*,video/*" [disabled]="creatingPost()">
-          <label class="input-group-text" for="fileInput">📎 Choose Image/Video</label>
-        </div>
+  <!-- Posts Feed -->
+  <div class="posts-feed">
+    @if (!posts().length && !loadingPosts()) {
+    <div class="no-posts">
+      No posts available
+    </div>
+    }
 
-        <!-- Selected File Display -->
-        @if (selectedFile()) {
-        <div class="alert alert-info d-flex justify-content-between align-items-center">
-          <span>📁 {{ selectedFile()!.name }} ({{ (selectedFile()!.size / 1024 / 1024).toFixed(2) }}MB)</span>
-          <button type="button" class="btn btn-sm btn-outline-danger" (click)="selectedFile.set(null)">
-            Remove
-          </button>
+    @for (p of posts(); track p.id) {
+    <mat-card class="post-card">
+      <mat-card-header class="post-header">
+        <mat-card-title class="post-title">{{ p.title }}</mat-card-title>
+        <mat-card-subtitle class="post-meta">
+          {{ p.authorUsername }} · {{ p.createdAt | date:'short' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (p.mediaUrl) {
+        <div class="post-media-wrapper">
+          @if (p.mediaUrl.includes('.mp4') || p.mediaUrl.includes('.webm') || p.mediaUrl.includes('.ogg')) {
+          <video controls class="post-media video">
+            <source src="http://localhost:8080{{ p.mediaUrl }}">
+            Your browser does not support the video tag.
+          </video>
+          }
+
+          @if (!(p.mediaUrl.includes('.mp4') || p.mediaUrl.includes('.webm') || p.mediaUrl.includes('.ogg'))) {
+          <img class="post-media img" src="http://localhost:8080{{ p.mediaUrl }}" alt="Post image">
+          }
         </div>
         }
 
-        <button type="submit" class="btn btn-primary align-self-start" [disabled]="creatingPost()">
-          {{ creatingPost() ? 'Publishing...' : 'Publish' }}
+        <p class="post-content">
+          {{ p.content }}
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button [color]="postLikes()[p.id] ? 'accent' : 'primary'" (click)="likePost(p.id)">
+          <mat-icon>{{ postLikes()[p.id] ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
+          Like
         </button>
-      </form>
-    </div>
-  </div>
 
-  <div class="row">
-    <!-- Posts -->
-    <main class="col-12">
-      @if (!posts().length && !loadingPosts()) {
-      <div class="text-muted text-center">
-        No posts available
-      </div>
-      }
-
-      @for (p of posts(); track p.id) {
-      <div class="card mb-3 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">{{ p.title }}</h5>
-
-          <h6 class="card-subtitle mb-2 text-muted">
-            {{ p.authorUsername }} · {{ p.createdAt | date:'short' }}
-          </h6>
-
-          <p class="card-text">
-            {{ p.content }}
-          </p>
-
-
-          <div class="d-flex gap-2">
-            <button class="btn btn-sm" [class.btn-primary]="postLikes()[p.id]"
-              [class.btn-outline-primary]="!postLikes()[p.id]" (click)="likePost(p.id)">
-              👍 Like
-            </button>
-
-            <button class="btn btn-sm btn-outline-secondary" (click)="toggleComment(p.id)">
-              💬 Comment ({{ postCommentCounts()[p.id] || 0 }})
-            </button>
-          </div>
-        </div>
-      </div>
-      }
-    </main>
+        <button mat-button color="primary" (click)="toggleComment(p.id)">
+          <mat-icon>comment</mat-icon>
+          Comment ({{ postCommentCounts()[p.id] || 0 }})
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    }
   </div>
 </div>

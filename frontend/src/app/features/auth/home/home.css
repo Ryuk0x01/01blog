@@ -1,91 +1,189 @@
-/* Bootstrap-friendly, polished styles for Home component */
 
-/* Page background and spacing */
-.container-fluid.py-4 {
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 60%);
-  padding-top: 1.5rem;
-  padding-bottom: 2rem;
-}
-
-/* Cards: subtle rounded look with smooth hover lift */
-.card.shadow-sm {
-  border: none;
-  border-radius: 0.75rem;
-  transition: transform 160ms ease, box-shadow 160ms ease;
-  overflow: hidden;
-}
-.card.shadow-sm:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(20, 35, 80, 0.08);
+.home-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-family: 'Roboto', sans-serif;
 }
 
-/* Profile card */
-.card .card-body h5 {
-  margin-bottom: 0.25rem;
-  font-weight: 700;
-}
-.card .card-body p.card-text {
-  color: #475569;
-}
-
-/* Post cards */
-.card.mb-3.shadow-sm .card-body {
-  padding: 1.1rem 1rem;
-}
-.card-title {
-  font-weight: 700;
-  font-size: 1.05rem;
-  margin-bottom: 0.25rem;
-}
-.card-subtitle.text-muted {
-  color: #64748b !important;
-  font-size: 0.9rem;
-}
-.card-text {
-  color: #334155;
-  line-height: 1.5;
-  margin-bottom: 0.6rem;
-  max-height: 7.5rem;
-  overflow: hidden;
+/* --------------------- */
+/* Header sticky */
+/* --------------------- */
+/* Header sticky */
+.home-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e0e0e0;
+  gap: 2rem;
 }
 
-/* Buttons: rounded with subtle hover */
-.btn {
-  border-radius: 0.55rem;
-  box-shadow: none;
-  transition: transform 120ms ease, box-shadow 120ms ease;
-}
-.btn:hover { transform: translateY(-2px); }
-.btn-sm { padding: 0.38rem 0.6rem; }
-
-/* Alerts */
-.alert-danger {
-  background: linear-gradient(90deg, #fff6f6, #fff2f2);
-  border: 1px solid #ffd6d6;
-  color: #7a1b1b;
+.header-left {
+  flex: 0 0 auto;
 }
 
-/* Utility tweaks */
-.text-muted { color: #6b7280 !important; }
-.d-flex.gap-2 > .btn { margin-right: 0.25rem; }
-
-/* Responsive: tighten spacing on small screens */
-@media (max-width: 768px) {
-  .container-fluid.py-4 { padding-left: 0.9rem; padding-right: 0.9rem; }
-  .card.mb-3.shadow-sm { margin-bottom: 1rem; }
+.header-center {
+  flex: 1 1 auto;
+  max-width: 500px;
 }
 
-/* Small visual accent for author name */
-.card-subtitle .author {
+.header-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.home-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #222;
+  margin: 0;
+  white-space: nowrap;
+}
+
+
+
+.logout-button {
+  white-space: nowrap;
   font-weight: 600;
-  color: #0f172a;
+  padding: 0.5rem 1rem;
 }
 
-/* Minor accessibility focus state */
-.btn:focus { box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12); outline: none; }
+.logout-text {
+  margin-left: 0.5rem;
+}
 
-/* Keep layout consistent with Bootstrap utilities already used in template */
-.mb-3 { margin-bottom: 1rem !important; }
+/* --------------------- */
+/* RESPONSIVE DESIGN */
+/* --------------------- */
 
-/* End of custom home styles */
+@media (max-width: 1024px) {
+  .home-header {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .header-center {
+    max-width: 300px;
+  }
+
+  .home-title {
+    font-size: 2rem;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .home-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .header-left {
+    flex: 0 0 100%;
+  }
+
+  .header-center {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .header-right {
+    flex: 0 0 100%;
+    justify-content: flex-end;
+  }
+
+  .home-title {
+    font-size: 1.75rem;
+  }
+
+  .logout-button {
+    display: flex;
+    align-items: center;
+  }
+
+  .logout-text {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-header {
+    padding: 0.75rem;
+  }
+
+  .home-title {
+    font-size: 1.5rem;
+  }
+
+  .search-input {
+    min-width: 80px;
+    font-size: 0.95rem;
+  }
+
+  .profile-button {
+    font-size: 1.3rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .search-dropdown {
+    max-height: 300px;
+  }
+
+  .search-result-item {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .user-icon {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+
+
+/* --------------------- */
+/* Posts */
+.posts-feed { display: flex; flex-direction: column; gap: 2rem; }
+
+.post-card {
+  border-radius: 15px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+  transition: box-shadow 0.3s;
+}
+.post-card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+
+.post-media-wrapper { margin: 1rem 0; border-radius: 12px; overflow: hidden; }
+.post-media { width: 100%; max-height: 400px; object-fit: cover; border-radius: 12px; }
+
+.post-content { font-size: 1rem; line-height: 1.6; color: #333; margin-top: 0.5rem; }
+
+mat-card-actions { display: flex; gap: 1rem; padding-top: 0.5rem; }
+mat-card-actions button {
+  font-size: 0.9rem;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+mat-card-actions button:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+
+/* --------------------- */
+/* Responsive */
+@media (max-width: 768px) {
+  .home-container { padding: 1rem; }
+  .home-title { font-size: 2rem; }
+  .post-media { max-height: 300px; }
+}
