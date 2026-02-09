@@ -56,7 +56,7 @@ export class CommentComponent {
                 },
                 error: err => {
                     if (err.status === 401) {
-                        this.auth.logout();
+                        this.auth.logout
                         return;
                     }
                     console.log(err);
