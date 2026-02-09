@@ -34,9 +34,15 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponseDTO>> getComments(@PathVariable Long postId) {
+    public ResponseEntity<Map<String,List<CommentResponseDTO>>> getComments(@PathVariable Long postId) {
         List<CommentResponseDTO> comments = commentService.getCommentsByPost(postId);
-        return ResponseEntity.ok(comments);
+        // System.out.println("-----------------------------------Fetching comments for post ID: " + postId);
+        // for (CommentResponseDTO comment : comments) {
+        //     System.out.println("Comment ID: " + comment.getId()
+        //             + ", Author: " + comment.getAuthorUsername()
+        //             + ", Content: " + comment.getContent());
+        // }
+        return ResponseEntity.ok(Map.of("data", comments));
     }
 
     @DeleteMapping("/{commentId}")

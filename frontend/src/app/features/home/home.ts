@@ -9,8 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AuthService } from '../../../core/services/auth';
+import { AuthService } from '../../core/services/auth';
 import { CreatePostComponent } from "./creat-posts/create-post";
+import { CommentComponent } from '../comments/comment';
 
 interface Post {
   id: number;
@@ -33,7 +34,18 @@ interface Profile {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, CreatePostComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    CreatePostComponent,
+    CommentComponent
+  ],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })

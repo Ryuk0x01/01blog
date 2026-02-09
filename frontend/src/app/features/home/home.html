@@ -71,10 +71,9 @@
           Like
         </button>
 
-        <button mat-button color="primary" (click)="toggleComment(p.id)">
-          <mat-icon>comment</mat-icon>
-          Comment ({{ postCommentCounts()[p.id] || 0 }})
-        </button>
+        
+        <app-comment [postId]="p.id"> </app-comment>
+
       </mat-card-actions>
     </mat-card>
     }
