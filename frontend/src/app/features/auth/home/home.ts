@@ -68,11 +68,7 @@ export class HomeComponent {
     this.loadPosts();
   }
 
-  private authHeaders(): { headers?: HttpHeaders } {
-    const token = this.auth.getToken();
-    if (!token) return {};
-    return { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) };
-  }
+
 
   logout() {
     this.auth.logout();
@@ -83,8 +79,7 @@ export class HomeComponent {
     this.loadingPosts.set(true);
     this.errorMessage.set('');
 
-    const opts = this.authHeaders();
-    this.http.get<any>(this.postsApi, opts)
+    this.http.get<any>(this.postsApi, this.auth.authHeaders())
       .subscribe({
         next: res => {
           const data = Array.isArray(res?.data) ? res.data : [];
@@ -92,49 +87,18 @@ export class HomeComponent {
           this.loadingPosts.set(false);
         },
         error: err => {
+          if (err.status === 401) {
+            this.logout();
+            return;
+          }
           this.errorMessage.set(err?.message || 'Failed to load posts');
           this.loadingPosts.set(false);
         }
       });
   }
 
-  createPost(): void {
-    if (!this.newPostTitle() || !this.newPostContent()) {
-      this.errorMessage.set('Please fill in title and content');
-      return;
-    }
-
-    this.creatingPost.set(true);
-
-    const formData = new FormData();
-    formData.append('title', this.newPostTitle());
-    formData.append('content', this.newPostContent());
-
-    if (this.selectedFile()) {
-      formData.append('file', this.selectedFile()!);
-    }
-
-    const opts = this.authHeaders();
-    this.http.post<any>(this.postsApi, formData, opts)
-      .subscribe({
-        next: () => {
-          this.newPostTitle.set('');
-          this.newPostContent.set('');
-          this.selectedFile.set(null);
-          this.creatingPost.set(false);
-          this.loadPosts();
-        },
-        error: err => {
-          this.errorMessage.set(err?.error?.message || 'Failed to create post');
-          this.creatingPost.set(false);
-          console.log(err);
-        }
-      });
-  }
-
   likePost(postId: number): void {
-    const opts = this.authHeaders();
-    this.http.post<any>(`${this.postReactionApi}/${postId}/like`, {}, opts)
+    this.http.post<any>(`${this.postReactionApi}/${postId}/like`, {}, this.auth.authHeaders())
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -143,6 +107,10 @@ export class HomeComponent {
           this.postLikes.set({ ...likes });
         },
         error: err => {
+          if (err.status === 401) {
+            this.logout();
+            return;
+          }
           console.log(err);
           this.errorMessage.set('Failed to like post');
         }
@@ -159,28 +127,4 @@ export class HomeComponent {
     this.postCommentCounts.set({ ...counts });
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      // Validate file type (images and videos)
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm', 'video/ogg'];
-      if (!validTypes.includes(file.type)) {
-        this.errorMessage.set('Please select a valid image or video file');
-        return;
-      }
-      // Validate file size (max 50MB)
-      const maxSize = 50 * 1024 * 1024;
-      if (file.size > maxSize) {
-        this.errorMessage.set('File size must be less than 50MB');
-        return;
-      }
-      this.selectedFile.set(file);
-      this.errorMessage.set('');
-    }
-  }
-
-  handlePostCreated(formData: FormData): void {
-    this.showCreatePost.set(false);
-    this.loadPosts();
-  }
 }

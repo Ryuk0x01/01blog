@@ -6,6 +6,7 @@
     <button mat-stroked-button color="primary" (click)="showCreatePost.set(!showCreatePost())">
       Create Post
     </button>
+    <button mat-stroked-button color="primary" (click)="logout()"> Log out </button>
   </div>
 
   <!-- Error message -->
@@ -23,7 +24,7 @@
   }
 
   @if (showCreatePost()) {
-  <app-create-post (postCreated)="handlePostCreated($event)"></app-create-post>
+  <app-create-post></app-create-post>
   }
 
   <!-- Posts Feed -->

@@ -1,39 +1,39 @@
-<div class="d-flex align-items-center justify-content-center min-vh-100 bg-auth">
-	<div class="card auth-card shadow-sm">
-		<div class="card-body p-4">
-			<div class="text-center mb-3">
-				<h2 class="mb-0">Create account</h2>
-				<small class="text-muted">Sign up to get started</small>
-			</div>
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header class="auth-header">
+      <h2>Create account</h2>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" novalidate>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" [(ngModel)]="username" name="username" required>
+        </mat-form-field>
 
-			<form (ngSubmit)="onSubmit()">
-				<div class="mb-3">
-					<label class="form-label">Username</label>
-					<input type="text" class="form-control form-control-lg" [(ngModel)]="username" name="username"
-						required>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Email</label>
-					<input type="email" class="form-control form-control-lg" [(ngModel)]="email" name="email" required>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Password</label>
-					<input type="password" class="form-control form-control-lg" [(ngModel)]="password" name="password"
-						required>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Confirm Password</label>
-					<input type="password" class="form-control form-control-lg" [(ngModel)]="confirmPassword"
-						name="confirmPassword" required>
-				</div>
-				<button class="btn btn-primary btn-lg w-100" type="submit">Register</button>
-			</form>
-			<div class="text-center mt-3">
-				<span class="text-muted">Do u have an account?</span>
-				<a routerLink="/auth/login" class="ms-1 fw-semibold text-decoration-none">
-					Login
-				</a>
-			</div>
-		</div>
-	</div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="email" name="email" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" [(ngModel)]="password" name="password" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="login-btn" type="submit">
+          Register
+        </button>
+      </form>
+
+      <div class="signup-link">
+        <p>Already have an account? <a routerLink="/auth/login">Login</a></p>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
