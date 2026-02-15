@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../../core/services/auth';
-import { HomeComponent } from '../home';
+import { postComponent } from '../../posts/posts';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class CreatePostComponent {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private home: HomeComponent
+    private post: postComponent
   ) {}
 
 
@@ -65,7 +65,7 @@ export class CreatePostComponent {
           this.newPostContent.set('');
           this.selectedFile.set(null);
           this.creatingPost.set(false);
-          this.home.loadPosts();          
+          this.post.loadPosts();          
         },
         error: err => {
           this.creatingPost.set(false);

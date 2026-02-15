@@ -1,0 +1,81 @@
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- Error message -->
+  @if (errorMessage()) {
+  <div class="error-alert">
+    <mat-icon>error_outline</mat-icon>
+    {{ errorMessage() }}
+  </div>
+  }
+
+  @if (loadingPosts()) {
+  <div class="loading-container">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Loading posts...</p>
+  </div>
+  }
+
+  @if (showCreatePost) {
+  <div class="create-post-wrapper">
+    <app-create-post></app-create-post>
+  </div>
+  }
+
+
+
+  @if (!posts().length && !loadingPosts()) {
+  <div class="no-posts">
+    <mat-icon class="no-posts-icon">article</mat-icon>
+    <p>No posts available yet</p>
+    <span>Be the first to share something!</span>
+  </div>
+  }
+
+
+  @for (p of posts(); track p.id) {
+  <mat-card class="post-card" appearance="outlined">
+    <mat-card-header class="post-header">
+      <div class="avatar-placeholder" mat-card-avatar>
+        {{ p.authorUsername.charAt(0).toUpperCase() }}
+      </div>
+      <mat-card-title class="post-author">{{ p.authorUsername }}</mat-card-title>
+      <mat-card-subtitle class="post-date">{{ p.createdAt | date:'mediumDate' }}</mat-card-subtitle>
+    </mat-card-header>
+
+    @if (p.title) {
+    <div class="post-title-bar">
+      <h2 class="post-title">{{ p.title }}</h2>
+    </div>
+    }
+
+    <mat-card-content class="post-body">
+      @if (p.mediaUrl) {
+      <div class="post-media-wrapper">
+        @if (p.mediaUrl.includes('.mp4') || p.mediaUrl.includes('.webm') || p.mediaUrl.includes('.ogg')) {
+        <video controls class="post-media">
+          <source src="http://localhost:8080{{ p.mediaUrl }}">
+          Your browser does not support the video tag.
+        </video>
+        } @else {
+        <img class="post-media" src="http://localhost:8080{{ p.mediaUrl }}" alt="Post image">
+        }
+      </div>
+      }
+
+      <p class="post-content">{{ p.content }}</p>
+    </mat-card-content>
+
+    <mat-card-actions class="post-actions">
+      <button mat-button class="action-btn" [class.liked]="postLikes()[p.id]" (click)="likePost(p.id)">
+        <mat-icon>{{ postLikes()[p.id] ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
+        <span>Like</span>
+      </button>
+
+      <app-comment [postId]="p.id"></app-comment>
+    </mat-card-actions>
+  </mat-card>
+  }
+
+
+</main>

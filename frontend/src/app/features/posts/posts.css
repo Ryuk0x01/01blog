@@ -1,0 +1,225 @@
+
+/* ── Main Content ── */
+.main-content {
+  margin-left: 560px;
+  max-width: 780px;
+  padding: 32px 24px;
+}
+
+.content-header {
+  margin-bottom: 24px;
+}
+
+.content-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* ── Error Alert ── */
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fdecea;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* ── Loading ── */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 0;
+  color: #888;
+}
+
+/* ── Create Post ── */
+.create-post-wrapper {
+  margin-bottom: 24px;
+}
+
+/* ── Posts Feed ── */
+.posts-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Empty State ── */
+.no-posts {
+  text-align: center;
+  padding: 64px 24px;
+  color: #999;
+}
+
+.no-posts-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.no-posts p {
+  font-size: 17px;
+  font-weight: 600;
+  color: #666;
+  margin: 0 0 4px;
+}
+
+.no-posts span {
+  font-size: 14px;
+}
+
+/* ── Post Card ── */
+.post-card {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  margin: 30px 0;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.post-header {
+  padding: 16px 20px 8px;
+}
+
+.avatar-placeholder {
+  background-color: #1976d2;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.post-author {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.post-date {
+  font-size: 13px;
+  color: #999;
+}
+
+.post-title-bar {
+  padding: 0 20px 4px;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* ── Post Body ── */
+.post-body {
+  padding: 4px 20px 16px;
+}
+
+.post-media-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background-color: #f5f5f5;
+}
+
+.post-media {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 420px;
+}
+
+.post-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ── Post Actions ── */
+.post-actions {
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn {
+  border-radius: 10px;
+  color: #666;
+  font-weight: 500;
+  gap: 6px;
+}
+
+.action-btn:hover {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.action-btn.liked {
+  color: #1976d2;
+}
+
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 72px;
+    padding: 20px 8px;
+    align-items: center;
+  }
+
+  .sidebar-brand {
+    padding: 0 0 24px;
+  }
+
+  .brand-text,
+  .nav-item span,
+  .logout-btn span {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .create-btn span {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 72px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 16px;
+  }
+}

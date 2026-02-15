@@ -1,81 +1,53 @@
-<div class="home-container">
+<div class="app-shell">
 
-  <!-- Header -->
-  <div class="home-header">
-    <h1>🏠 Home</h1>
-    <button mat-stroked-button color="primary" (click)="showCreatePost.set(!showCreatePost())">
-      Create Post
-    </button>
-    <button mat-stroked-button color="primary" (click)="logout()"> Log out </button>
-  </div>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <mat-icon class="brand-icon">hub</mat-icon>
+      <span class="brand-text">PostHub</span>
+    </div>
 
-  <!-- Error message -->
-  @if (errorMessage()) {
-  <div class="error-alert">
-    {{ errorMessage() }}
-  </div>
-  }
+    <nav class="sidebar-nav">
+      <a class="nav-item active">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+      </a>
+      <a class="nav-item">
+        <mat-icon>explore</mat-icon>
+        <span>Explore</span>
+      </a>
+      <a class="nav-item">
+        <mat-icon>notifications_none</mat-icon>
+        <span>Notifications</span>
+      </a>
+      <a class="nav-item">
+        <mat-icon>bookmark_border</mat-icon>
+        <span>Bookmarks</span>
+      </a>
+      <a class="nav-item">
+        <mat-icon>person_outline</mat-icon>
+        <span>Profile</span>
+      </a>
+    </nav>
 
-  @if (loadingPosts()) {
-  <div class="loading-container">
-    <mat-spinner diameter="40"></mat-spinner>
-    <p>Loading posts...</p>
-  </div>
-  }
+    <div class="sidebar-actions">
+      <button mat-flat-button color="primary" class="create-btn" (click)="showCreatePost.set(!showCreatePost())">
+        <mat-icon>add</mat-icon>
+        Create Post
+      </button>
+    </div>
 
-  @if (showCreatePost()) {
-  <app-create-post></app-create-post>
-  }
+    <div class="sidebar-footer">
+      <button mat-button class="logout-btn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Log out</span>
+      </button>
+    </div>
+  </aside>
+
 
   <!-- Posts Feed -->
   <div class="posts-feed">
-    @if (!posts().length && !loadingPosts()) {
-    <div class="no-posts">
-      No posts available
-    </div>
-    }
-
-    @for (p of posts(); track p.id) {
-    <mat-card class="post-card">
-      <mat-card-header class="post-header">
-        <mat-card-title class="post-title">{{ p.title }}</mat-card-title>
-        <mat-card-subtitle class="post-meta">
-          {{ p.authorUsername }} · {{ p.createdAt | date:'short' }}
-        </mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        @if (p.mediaUrl) {
-        <div class="post-media-wrapper">
-          @if (p.mediaUrl.includes('.mp4') || p.mediaUrl.includes('.webm') || p.mediaUrl.includes('.ogg')) {
-          <video controls class="post-media video">
-            <source src="http://localhost:8080{{ p.mediaUrl }}">
-            Your browser does not support the video tag.
-          </video>
-          }
-
-          @if (!(p.mediaUrl.includes('.mp4') || p.mediaUrl.includes('.webm') || p.mediaUrl.includes('.ogg'))) {
-          <img class="post-media img" src="http://localhost:8080{{ p.mediaUrl }}" alt="Post image">
-          }
-        </div>
-        }
-
-        <p class="post-content">
-          {{ p.content }}
-        </p>
-      </mat-card-content>
-
-      <mat-card-actions>
-        <button mat-button [color]="postLikes()[p.id] ? 'accent' : 'primary'" (click)="likePost(p.id)">
-          <mat-icon>{{ postLikes()[p.id] ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
-          Like
-        </button>
-
-        
-        <app-comment [postId]="p.id"> </app-comment>
-
-      </mat-card-actions>
-    </mat-card>
-    }
+    <app-posts [showCreatePost]="showCreatePost()"></app-posts>
   </div>
 </div>
