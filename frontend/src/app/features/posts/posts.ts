@@ -1,6 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth';
 import { CommentComponent } from '../comments/comment';
 import { CreatePostComponent } from '../home/creat-posts/create-post';
+import { HomeComponent } from '../home/home';
 
 interface Post {
     id: number;
@@ -73,7 +73,8 @@ export class postComponent {
 
     constructor(
         private auth: AuthService,
-        private http: HttpClient
+        private http: HttpClient,
+        private home: HomeComponent
     ) { }
 
 
@@ -96,7 +97,7 @@ export class postComponent {
                 },
                 error: err => {
                     if (err.status === 401) {
-                        // this.logout();
+                        this.home.logout();
                         return;
                     }
                     this.errorMessage.set(err?.message || 'Failed to load posts');
@@ -116,23 +117,13 @@ export class postComponent {
                 },
                 error: err => {
                     if (err.status === 401) {
-                        // this.logout();
+                        this.home.logout();
                         return;
                     }
                     console.log(err);
                     this.errorMessage.set('Failed to like post');
                 }
             });
-    }
-
-
-    toggleComment(postId: number): void {
-        const counts = this.postCommentCounts();
-        if (!counts[postId]) {
-            counts[postId] = 0;
-        }
-        counts[postId]++;
-        this.postCommentCounts.set({ ...counts });
     }
 
 }

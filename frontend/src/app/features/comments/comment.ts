@@ -1,8 +1,12 @@
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 interface Comment {
     id: number;
@@ -17,7 +21,7 @@ interface Comment {
 @Component({
     selector: 'app-comment',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
     templateUrl: './comment.html',
     styleUrls: ['./comment.css']
 })
@@ -36,7 +40,14 @@ export class CommentComponent {
     constructor(
         private http: HttpClient,
         private auth: AuthService
-    ) { }
+    ) {
+        effect(() => {
+            const id = this.postId();
+            if (id) {
+                this.loadComments();
+            }
+        });
+    }
 
 
     loadComments(): void {
@@ -124,11 +135,9 @@ export class CommentComponent {
             });
     }
 
-    toggleComments(): void {
+     toggleComments(): void {
         this.showComments.set(!this.showComments());
-
-        if (this.showComments() && this.comments().length === 0) {
-            this.loadComments();
-        }
     }
+
+    
 }

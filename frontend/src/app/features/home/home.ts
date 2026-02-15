@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth';
 import { postComponent } from '../posts/posts';
-import { CreatePostComponent } from './creat-posts/create-post';
+;
 
 @Component({
   selector: 'app-home',

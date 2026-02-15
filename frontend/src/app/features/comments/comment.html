@@ -1,40 +1,45 @@
 <div class="comments-container">
-    <button class="toggle-btn" (click)="toggleComments()">
-        {{ showComments() ? 'Hide Comments' : 'Show Comments' }} ({{ comments().length }})
-    </button>
 
     @if (showComments()) {
     <div class="comments-section">
 
         <!-- Post New Comment -->
         <div class="new-comment">
-            <h4>Add a Comment</h4>
-
             <div class="comment-input-group">
-                <textarea class="comment-input" [(ngModel)]="newCommentContent" placeholder="Write your comment here..."
-                    rows="3"></textarea>
+                <textarea class="comment-input" [(ngModel)]="newCommentContent" placeholder="Write a comment..."
+                    rows="2"></textarea>
 
-                <button class="submit-btn" (click)="postComment()" [disabled]="postingComment()">
-                    {{ postingComment() ? 'Posting...' : 'Post Comment' }}
-                </button>
+                <div class="input-actions">
+                    <button mat-flat-button color="primary" class="submit-btn" (click)="postComment()"
+                        [disabled]="postingComment()">
+                        <mat-icon>{{ postingComment() ? 'hourglass_empty' : 'send' }}</mat-icon>
+                        {{ postingComment() ? 'Posting...' : 'Post' }}
+                    </button>
+                </div>
             </div>
 
             @if (errorMessage()) {
-            <p class="error-message">{{ errorMessage() }}</p>
+            <div class="error-message">
+                <mat-icon>error_outline</mat-icon>
+                {{ errorMessage() }}
+            </div>
             }
         </div>
 
         <!-- Loading -->
         @if (loadingComments()) {
         <div class="loading">
-            Loading comments...
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Loading comments...</span>
         </div>
         } @else {
 
         <!-- No comments -->
         @if (comments().length === 0) {
         <div class="no-comments">
-            No comments yet. Be the first to comment!
+            <mat-icon>forum</mat-icon>
+            <p>No comments yet</p>
+            <span>Be the first to share your thoughts!</span>
         </div>
         } @else {
 
@@ -42,21 +47,21 @@
         <div class="comments-list">
             @for (comment of comments(); track comment.id) {
             <div class="comment-item">
-                <div class="comment-header">
-                    <strong class="comment-author">
-                        {{ comment.authorUsername }}
-                    </strong>
-                    <small class="comment-date">
-                        {{ comment.createdAt | date:'short' }}
-                    </small>
+                <div class="comment-avatar">
+                    {{ comment.authorUsername.charAt(0).toUpperCase() }}
                 </div>
 
-                <p class="comment-content">
-                    {{ comment.content }}
-                </p>
+                <div class="comment-body">
+                    <div class="comment-header">
+                        <strong class="comment-author">{{ comment.authorUsername }}</strong>
+                        <span class="comment-date">{{ comment.createdAt | date:'mediumDate' }}</span>
+                    </div>
 
-                <button class="delete-btn" (click)="deleteComment(comment.id)" title="Delete comment">
-                    Delete
+                    <p class="comment-content">{{ comment.content }}</p>
+                </div>
+
+                <button mat-icon-button class="delete-btn" (click)="deleteComment(comment.id)" title="Delete comment">
+                    <mat-icon>close</mat-icon>
                 </button>
             </div>
             }
