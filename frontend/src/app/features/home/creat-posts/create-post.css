@@ -1,7 +1,4 @@
-/* --------------------- */
 
-/* --------------------- */
-/* Create Post Card */
 .create-post-card {
   border-radius: 15px;
   padding: 1.5rem;
@@ -25,4 +22,16 @@
   padding: 0.5rem 1rem;
   border-radius: 10px;
   font-size: 0.9rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.card-header {
+  display: flex;
+  justify-content: center;
+  padding: 18px;
+
 }

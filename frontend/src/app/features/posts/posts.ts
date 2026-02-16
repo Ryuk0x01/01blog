@@ -63,12 +63,10 @@ export class postComponent {
     selectedFile = signal<File | null>(null);
     creatingPost = signal(false);
 
-    // Like/dislike/comment tracking (postId -> state)
     postLikes = signal<Record<number, boolean>>({});
     postCommentCounts = signal<Record<number, number>>({});
 
     private postsApi = 'http://localhost:8080/api/posts';
-    private postReactionApi = 'http://localhost:8080/api/posts';
 
 
     constructor(
@@ -107,7 +105,7 @@ export class postComponent {
     }
 
     likePost(postId: number): void {
-        this.http.post<any>(`${this.postReactionApi}/${postId}/like`, {}, this.auth.authHeaders())
+        this.http.post<any>(`${this.postsApi}/${postId}/like`, {}, this.auth.authHeaders())
             .subscribe({
                 next: (res) => {
                     console.log(res);

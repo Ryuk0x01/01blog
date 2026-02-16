@@ -5,17 +5,17 @@
 
 /* ── Toggle Button ── */
 .toggle-btn {
-  border-radius: 10px !important;
-  color: #666 !important;
-  font-weight: 500 !important;
+  border-radius: 10px;
+  color: #666;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .toggle-btn:hover {
-  background-color: #e3f2fd !important;
-  color: #1976d2 !important;
+  background-color: #e3f2fd;
+  color: #1976d2;
 }
 
 .comment-count {
@@ -90,23 +90,23 @@
 }
 
 .submit-btn {
-  border-radius: 8px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  padding: 8px 18px !important;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 18px;
   gap: 6px;
-  text-transform: none !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2) !important;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
 }
 
 .submit-btn:hover:not(:disabled) {
-  box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3) !important;
+  box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
   transform: translateY(-1px);
 }
 
 .submit-btn:disabled {
-  opacity: 0.6 !important;
+  opacity: 0.6;
 }
 
 .submit-btn mat-icon {
@@ -249,10 +249,7 @@
 .delete-btn {
   opacity: 0;
   transition: all 0.15s ease;
-  color: #999 !important;
-  width: 32px !important;
-  height: 32px !important;
-  min-width: 32px;
+  color: #999;
   flex-shrink: 0;
 }
 
@@ -267,8 +264,8 @@
 }
 
 .delete-btn:hover {
-  color: #fff !important;
-  background-color: #ef5350 !important;
+  color: #fff;
+  background-color: #ef5350;
 }
 
 /* ── Responsive ── */
