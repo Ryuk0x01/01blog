@@ -3,7 +3,10 @@ package com.blog.backend.service;
 import com.blog.backend.dto.PostRequestDTO;
 import com.blog.backend.dto.PostResponseDTO;
 import com.blog.backend.entity.Post;
+import com.blog.backend.entity.ReactionType;
 import com.blog.backend.entity.User;
+import com.blog.backend.repository.CommentRepository;
+import com.blog.backend.repository.PostReactionRepository;
 import com.blog.backend.repository.PostRepository;
 import com.blog.backend.repository.UserRepository;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,10 +25,15 @@ public class PostService {
     private final UserRepository userRepository;
     private final long MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
+    private final PostReactionRepository postReactionRepository;
+    private final CommentRepository commentRepository;
+
     private final String uploadDir = "uploads/";
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PostReactionRepository postReactionRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
+        this.postReactionRepository = postReactionRepository;
+        this.commentRepository = commentRepository;
         this.userRepository = userRepository;
     }
 
@@ -59,14 +67,14 @@ public class PostService {
         }
 
         postRepository.save(post);
-        return convertToDTO(post);
+        return convertToDTO(post, userEmail);
     }
 
     // Get all posts → public
-    public List<PostResponseDTO> getAllPosts() {
+    public List<PostResponseDTO> getAllPosts(String userEmail) {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDTO> dtoList = posts.stream()
-                .map(this::convertToDTO)
+                .map(post -> convertToDTO(post, userEmail))
                 .toList();
         return dtoList;
     }
@@ -77,9 +85,9 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
-    public PostResponseDTO getPostByIdDTO(Long id) {
+    public PostResponseDTO getPostByIdDTO(Long id, String userEmail) {
         Post post = getPostById(id);
-        return convertToDTO(post);
+        return convertToDTO(post, userEmail);
     }
 
     // Update post → only author
@@ -114,7 +122,7 @@ public class PostService {
         }
 
         postRepository.save(post);
-        return convertToDTO(post);
+        return convertToDTO(post, userEmail);
     }
 
     // Delete post → author or admin
@@ -130,7 +138,7 @@ public class PostService {
         }
     }
 
-    public PostResponseDTO convertToDTO(Post post) {
+    public PostResponseDTO convertToDTO(Post post, String currentUsername) {
         PostResponseDTO dto = new PostResponseDTO();
         dto.setId(post.getId());
         dto.setTitle(post.getTitle());
@@ -139,6 +147,28 @@ public class PostService {
         dto.setMediaUrl(post.getMediaUrl());
         dto.setCreatedAt(post.getCreatedAt());
         dto.setUpdatedAt(post.getUpdatedAt());
+
+        // COUNT LIKES
+        long likesCount = postReactionRepository
+                .countByPostIdAndType(post.getId(), ReactionType.LIKE);
+
+        dto.setLikesCount(likesCount);
+
+        // COUNT COMMENTS
+        long commentsCount = commentRepository
+                .countByPostId(post.getId());
+
+        dto.setCommentsCount(commentsCount);
+
+        // CHECK IF USER LIKED
+        boolean liked = postReactionRepository
+                .existsByPostIdAndUserEmailAndType(
+                        post.getId(),
+                        currentUsername,
+                        ReactionType.LIKE);
+
+        dto.setLikedByCurrentUser(liked);
+
         return dto;
     }
 }

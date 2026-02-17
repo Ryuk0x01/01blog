@@ -33,15 +33,17 @@ public class PostController {
 
     // Get all posts → public
     @GetMapping
-    public ResponseEntity<?> getAllPosts() {
-        List<PostResponseDTO> posts = postService.getAllPosts();
+    public ResponseEntity<?> getAllPosts(Authentication auth) {
+        String email = (String) auth.getPrincipal();
+        List<PostResponseDTO> posts = postService.getAllPosts(email);
         return ResponseEntity.ok(Map.of("status", "success", "data", posts));
     }
 
     // Get single post → public
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPost(@PathVariable Long id) {
-        PostResponseDTO post = postService.getPostByIdDTO(id);
+    public ResponseEntity<?> getPost(@PathVariable Long id, Authentication auth) {
+        String email = (String) auth.getPrincipal();
+        PostResponseDTO post = postService.getPostByIdDTO(id, email);
         return ResponseEntity.ok(Map.of("status", "success", "data", post));
     }
 

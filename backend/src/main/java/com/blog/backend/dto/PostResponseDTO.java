@@ -16,4 +16,8 @@ public class PostResponseDTO {
     private String mediaUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private long likesCount;
+    private long commentsCount;
+    private boolean likedByCurrentUser;
 }

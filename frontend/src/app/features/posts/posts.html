@@ -68,17 +68,20 @@
 
     <mat-card-actions class="post-actions">
       <button mat-button class="action-btn" [class.liked]="postLikes()[p.id]" (click)="likePost(p.id)">
-        <mat-icon>{{ postLikes()[p.id] ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
-        <span>Like</span>
+        <mat-icon color="{{ postLikes()[p.id] ? 'primary' : '' }}">
+          {{ postLikes()[p.id] ? 'thumb_up' : 'thumb_up_off_alt' }}
+        </mat-icon>
+        <span>Like ({{ postLikesCount()[p.id] }})</span>
       </button>
 
       <button mat-button class="toggle-btn" (click)="commentComponent.toggleComments()">
         <mat-icon>{{ commentComponent.showComments() ? 'expand_less' : 'chat_bubble_outline' }}</mat-icon>
-        <span>{{ commentComponent.showComments() ? 'Hide Comments' : 'Comments' }}</span>
+        <span>{{ commentComponent.showComments() ? 'Hide Comments' : 'Comments' }} ({{ postCommentCounts()[p.id]
+          }})</span>
       </button>
     </mat-card-actions>
-    
-      <app-comment #commentComponent [postId]="p.id"></app-comment>
+
+    <app-comment #commentComponent [postId]="p.id"></app-comment>
 
   </mat-card>
   }

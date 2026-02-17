@@ -11,6 +11,11 @@ import java.util.Optional;
 public interface PostReactionRepository extends JpaRepository<PostReaction, Long> {
 
     Optional<PostReaction> findByUserAndPost(User user, Post post);
-
     long countByPostAndType(Post post, ReactionType type);
+    long countByPostIdAndType(Long postId, ReactionType type);
+
+     boolean existsByPostIdAndUserEmailAndType(
+            Long postId,
+            String email,
+            ReactionType type);
 }

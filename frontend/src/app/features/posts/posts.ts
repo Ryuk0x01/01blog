@@ -22,6 +22,10 @@ interface Post {
     mediaUrl?: string;
     createdAt?: string;
     updatedAt?: string;
+
+    likesCount?: number;
+    commentsCount?: number;
+    likedByCurrentUser?: boolean;
 }
 
 interface Profile {
@@ -55,7 +59,7 @@ export class postComponent {
     errorMessage = signal('');
     selectedProfile = signal<Profile | null>(null);
 
-     @Input() showCreatePost = false;
+    @Input() showCreatePost = false;
 
     // Create post form
     newPostTitle = signal('');
@@ -65,6 +69,7 @@ export class postComponent {
 
     postLikes = signal<Record<number, boolean>>({});
     postCommentCounts = signal<Record<number, number>>({});
+    postLikesCount = signal<Record<number, number>>({});
 
     private postsApi = 'http://localhost:8080/api/posts';
 
@@ -92,6 +97,20 @@ export class postComponent {
                     const data = Array.isArray(res?.data) ? res.data : [];
                     this.posts.set(data);
                     this.loadingPosts.set(false);
+                    console.log('Posts loaded:', data);
+
+                    // Initialize likes and comment counts
+                    const likes: Record<number, boolean> = {};
+                    const commentCounts: Record<number, number> = {};
+                    const likesCount: Record<number, number> = {};
+                    data.forEach((post: any) => {
+                        likes[post.id] = post.likedByCurrentUser || false;
+                        commentCounts[post.id] = post.commentsCount || 0;
+                        likesCount[post.id] = post.likesCount || 0;
+                    });
+                    this.postLikesCount.set(likesCount);
+                    this.postLikes.set(likes);
+                    this.postCommentCounts.set(commentCounts);
                 },
                 error: err => {
                     if (err.status === 401) {
@@ -107,18 +126,29 @@ export class postComponent {
     likePost(postId: number): void {
         this.http.post<any>(`${this.postsApi}/${postId}/like`, {}, this.auth.authHeaders())
             .subscribe({
-                next: (res) => {
-                    console.log(res);
-                    const likes = this.postLikes();
+                next: () => {
+
+                    const likes = { ...this.postLikes() };
+                    const likesCount = { ...this.postLikesCount() };
+
+                    if (likes[postId]) {
+                        // unlike
+                        likesCount[postId] = (likesCount[postId] || 1) - 1;
+                    } else {
+                        // like
+                        likesCount[postId] = (likesCount[postId] || 0) + 1;
+                    }
+
                     likes[postId] = !likes[postId];
-                    this.postLikes.set({ ...likes });
+
+                    this.postLikes.set(likes);
+                    this.postLikesCount.set(likesCount);
                 },
                 error: err => {
                     if (err.status === 401) {
                         this.home.logout();
                         return;
                     }
-                    console.log(err);
                     this.errorMessage.set('Failed to like post');
                 }
             });
