@@ -59,10 +59,11 @@
 
                     <p class="comment-content">{{ comment.content }}</p>
                 </div>
-
+                @if ( auth.getUsername() === comment.authorUsername) {
                 <button mat-icon-button class="delete-btn" (click)="deleteComment(comment.id)" title="Delete comment">
                     <mat-icon>close</mat-icon>
                 </button>
+                }
             </div>
             }
         </div>

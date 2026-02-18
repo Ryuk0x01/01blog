@@ -54,6 +54,7 @@ public class PostController {
             @Valid PostRequestDTO dto,
             Authentication auth) throws Exception {
         String email = (String) auth.getPrincipal();
+        System.out.println("---------->>>>>>> " + email);
         PostResponseDTO updated = postService.updatePost(id, dto, email);
         return ResponseEntity.ok(Map.of("status", "success", "data", updated));
     }

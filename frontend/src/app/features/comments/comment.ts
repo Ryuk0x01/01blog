@@ -39,7 +39,7 @@ export class CommentComponent {
 
     constructor(
         private http: HttpClient,
-        private auth: AuthService
+        public auth: AuthService
     ) {
         effect(() => {
             const id = this.postId();
@@ -118,8 +118,12 @@ export class CommentComponent {
             return;
         }
 
+        const postId = this.postId();
+        if (!postId) return;
+
+
         const opts = this.auth.authHeaders();
-        this.http.delete<any>(`${this.commentApi}/${commentId}`, opts)
+        this.http.delete<any>(`${this.commentApi}/${postId}/comments/${commentId}`, opts)
             .subscribe({
                 next: () => {
                     this.loadComments();
@@ -135,9 +139,9 @@ export class CommentComponent {
             });
     }
 
-     toggleComments(): void {
+    toggleComments(): void {
         this.showComments.set(!this.showComments());
     }
 
-    
+
 }

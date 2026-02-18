@@ -156,6 +156,71 @@
   white-space: pre-wrap;
 }
 
+/* ── Edit Form ── */
+.edit-form {
+  padding: 16px 20px 20px;
+  background: linear-gradient(180deg, #ffffff, #fbfbfd);
+  border-top: 1px solid #f0f0f5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-form .full-width {
+  width: 100%;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.file-input-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.file-input {
+  display: none;
+}
+
+.selected-file-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f7ff;
+  border: 1px solid #e6edff;
+  color: #1a237e;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.selected-file-alert mat-icon {
+  font-size: 18px;
+}
+
+@media (max-width: 600px) {
+  .edit-form {
+    padding: 12px;
+  }
+  .main-content {
+    padding: 16px;
+  }
+}
+
+/* Delete button */
+.delete-btn {
+  color: #d32f2f;
+  border-radius: 10px;  
+}
+
+.delete-btn:hover {
+  background-color: rgba(211, 47, 47, 0.08);
+}
+
 /* ── Post Actions ── */
 .post-actions {
   padding: 4px 12px;

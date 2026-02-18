@@ -29,6 +29,28 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  getUsername(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = token.split('.')[1];
+      // base64url -> base64
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+      const obj = JSON.parse(jsonPayload);
+      return obj.username ?? null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   logout() {
     localStorage.removeItem('token');
   }

@@ -67,6 +67,12 @@ export class postComponent {
     selectedFile = signal<File | null>(null);
     creatingPost = signal(false);
 
+    // Edit post state
+    editingPostId = signal<number | null>(null);
+    editTitle = signal('');
+    editContent = signal('');
+    editSelectedFile = signal<File | null>(null);
+    editing = signal(false);
     postLikes = signal<Record<number, boolean>>({});
     postCommentCounts = signal<Record<number, number>>({});
     postLikesCount = signal<Record<number, number>>({});
@@ -75,7 +81,7 @@ export class postComponent {
 
 
     constructor(
-        private auth: AuthService,
+        public auth: AuthService,
         private http: HttpClient,
         private home: HomeComponent
     ) { }
@@ -154,4 +160,78 @@ export class postComponent {
             });
     }
 
+    startEdit(post: Post): void {
+        this.editingPostId.set(post.id);
+        this.editTitle.set(post.title || '');
+        this.editContent.set(post.content || '');
+        this.editSelectedFile.set(null);
+    }
+
+    onEditFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            this.editSelectedFile.set(input.files[0]);
+        }
+    }
+
+    cancelEdit(): void {
+        this.editingPostId.set(null);
+        this.editTitle.set('');
+        this.editContent.set('');
+        this.editSelectedFile.set(null);
+        this.editing.set(false);
+    }
+
+    saveEdit(postId: number): void {
+        this.editing.set(true);
+        const title = this.editTitle();
+        const content = this.editContent();
+        const file = this.editSelectedFile();
+
+        let request$;
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+
+        if (file) {
+            formData.append('file', file);
+        }
+        request$ = this.http.put<any>(`${this.postsApi}/${postId}`, formData, this.auth.authHeaders());
+
+        request$.subscribe({
+            next: res => {
+                const updated = res?.data || { id: postId, title, content };
+                const updatedPosts = this.posts().map(p => p.id === postId ? { ...p, title: updated.title, content: updated.content, mediaUrl: updated.mediaUrl ?? p.mediaUrl, updatedAt: updated.updatedAt ?? p.updatedAt } : p);
+                this.posts.set(updatedPosts);
+                this.cancelEdit();
+            },
+            error: err => {
+                if (err.status === 401) {
+                    this.home.logout();
+                    return;
+                }
+                this.errorMessage.set('Failed to update post');
+                this.editing.set(false);
+            }
+        });
+    }
+
+    deletePost(postId: number): void {
+        if (!confirm('Delete this post?')) return;
+
+        this.http.delete<any>(`${this.postsApi}/${postId}`, this.auth.authHeaders())
+            .subscribe({
+                next: () => {
+                    const remaining = this.posts().filter(p => p.id !== postId);
+                    this.posts.set(remaining);
+                },
+                error: err => {
+                    if (err.status === 401) {
+                        this.home.logout();
+                        return;
+                    }
+                    this.errorMessage.set('Failed to delete post');
+                }
+            });
+    }
 }

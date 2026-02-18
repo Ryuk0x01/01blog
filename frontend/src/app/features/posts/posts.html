@@ -66,6 +66,48 @@
       <p class="post-content">{{ p.content }}</p>
     </mat-card-content>
 
+    @if (editingPostId() === p.id) {
+    <div class="edit-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Edit title</mat-label>
+        <input matInput type="text" placeholder="Post title..." [(ngModel)]="editTitle" name="editTitle"
+          [disabled]="editing()">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Edit content</mat-label>
+        <textarea matInput rows="3" placeholder="What's on your mind?" [(ngModel)]="editContent" name="editContent"
+          [disabled]="editing()"></textarea>
+      </mat-form-field>
+
+      <div class="file-input-wrapper">
+        <input type="file" #editFile class="file-input" id="editFile" (change)="onEditFileSelected($event)"
+          accept="image/*,video/*" [disabled]="editing()">
+        <button mat-raised-button type="button" color="primary" (click)="editFile.click()" [disabled]="editing()">
+          <mat-icon>attach_file</mat-icon>
+          Choose Image/Video
+        </button>
+      </div>
+
+      @if (editSelectedFile()) {
+      <div class="selected-file-alert">
+        <span>📁 {{ editSelectedFile()!.name }} ({{ (editSelectedFile()!.size / 1024 / 1024).toFixed(2) }}MB)</span>
+        <button mat-icon-button (click)="editSelectedFile.set(null)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      }
+
+      <div class="edit-actions">
+        <button mat-raised-button color="primary" type="button" (click)="saveEdit(p.id)" [disabled]="editing()">
+          <mat-icon>{{ editing() ? 'hourglass_empty' : 'save' }}</mat-icon>
+          {{ editing() ? 'Saving...' : 'Save' }}
+        </button>
+        <button mat-button type="button" (click)="cancelEdit()" [disabled]="editing()">Cancel</button>
+      </div>
+    </div>
+    }
+
     <mat-card-actions class="post-actions">
       <button mat-button class="action-btn" [class.liked]="postLikes()[p.id]" (click)="likePost(p.id)">
         <mat-icon color="{{ postLikes()[p.id] ? 'primary' : '' }}">
@@ -79,6 +121,18 @@
         <span>{{ commentComponent.showComments() ? 'Hide Comments' : 'Comments' }} ({{ postCommentCounts()[p.id]
           }})</span>
       </button>
+
+      @if (auth.getUsername() === p.authorUsername) {
+      <button mat-button class="action-btn" (click)="startEdit(p)">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+
+      <button mat-button class="delete-btn" (click)="deletePost(p.id)">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+      }
     </mat-card-actions>
 
     <app-comment #commentComponent [postId]="p.id"></app-comment>
