@@ -1,8 +1,9 @@
 
 /* ── Main Content ── */
 .main-content {
-  margin-left: 560px;
-  max-width: 780px;
+
+  /* margin-left: 560px; */
+  /* max-width: 780px; */
   padding: 32px 24px;
 }
 
@@ -289,6 +290,19 @@
   justify-content: center;
   animation: fadeIn 0.3s ease;
 }
+
+.sidebar-actions {
+  padding: 2px 0;
+}
+
+.create-btn {
+  width: 100%;
+  padding: 20px !important;
+  font-size: 16px !important;
+  border-radius: 28px !important;
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+}
+
 
 @keyframes fadeIn {
   from {

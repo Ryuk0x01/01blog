@@ -16,7 +16,14 @@
   </div>
   }
 
-  @if (showCreatePost) {
+  <div class="sidebar-actions">
+    <button mat-flat-button color="primary" class="create-btn" (click)="showCreatePost.set(!showCreatePost())">
+      <mat-icon>add</mat-icon>
+      Create Post
+    </button>
+  </div>
+
+  @if (showCreatePost()) {
   <div class="create-post-wrapper">
     <app-create-post></app-create-post>
   </div>

@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth';
 import { CommentComponent } from '../comments/comment';
 import { CreatePostComponent } from '../home/creat-posts/create-post';
-import { HomeComponent } from '../home/home';
+import { Router } from '@angular/router';
 
 interface Post {
     id: number;
@@ -59,7 +59,7 @@ export class postComponent {
     errorMessage = signal('');
     selectedProfile = signal<Profile | null>(null);
 
-    @Input() showCreatePost = false;
+    showCreatePost = signal(false);
 
     // Create post form
     newPostTitle = signal('');
@@ -83,7 +83,7 @@ export class postComponent {
     constructor(
         public auth: AuthService,
         private http: HttpClient,
-        private home: HomeComponent
+        private router: Router
     ) { }
 
 
@@ -120,7 +120,8 @@ export class postComponent {
                 },
                 error: err => {
                     if (err.status === 401) {
-                        this.home.logout();
+                        this.auth.logout();
+                        this.router.navigate(['/auth/login']);
                         return;
                     }
                     this.errorMessage.set(err?.message || 'Failed to load posts');
@@ -152,7 +153,8 @@ export class postComponent {
                 },
                 error: err => {
                     if (err.status === 401) {
-                        this.home.logout();
+                        this.auth.logout();
+                        this.router.navigate(['/auth/login']);
                         return;
                     }
                     this.errorMessage.set('Failed to like post');
@@ -207,7 +209,8 @@ export class postComponent {
             },
             error: err => {
                 if (err.status === 401) {
-                    this.home.logout();
+                    this.auth.logout();
+                    this.router.navigate(['/auth/login']);
                     return;
                 }
                 this.errorMessage.set('Failed to update post');
@@ -227,7 +230,8 @@ export class postComponent {
                 },
                 error: err => {
                     if (err.status === 401) {
-                        this.home.logout();
+                        this.auth.logout();
+                        this.router.navigate(['/auth/login']);
                         return;
                     }
                     this.errorMessage.set('Failed to delete post');

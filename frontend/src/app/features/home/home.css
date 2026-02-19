@@ -5,153 +5,24 @@
   background-color: #f5f5f5;
 }
 
-/* ── Sidebar ── */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100vh;
-  background-color: #fff;
-  border-right: 1px solid #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  padding: 24px 16px;
-  z-index: 100;
-  overflow-y: auto;
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 12px 28px;
-}
-
-.brand-icon {
-  font-size: 28px;
-  width: 28px;
-  height: 28px;
-  color: #1976d2;
-}
-
-.brand-text {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1a1a1a;
-  letter-spacing: -0.5px;
-}
-
-/* ── Navigation ── */
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  color: #444;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.nav-item:hover {
-  background-color: #f0f0f0;
-  color: #1a1a1a;
-}
-
-.nav-item.active {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  font-weight: 600;
-}
-
-.nav-item mat-icon {
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-}
-
-/* ── Sidebar Actions ── */
-.sidebar-actions {
-  padding: 24px 0;
-}
-
-.create-btn {
-  width: 100%;
-  justify-content: flex-start;
-  gap: 10px;
-  color: #000000;
-  border-radius: 12px;
-  padding: 10px 16px;
-}
-
-.create-btn:hover {
-  color: #1976d2;
-  background-color: #e3f2fd;
-}
-
-.logout-btn {
-  width: 100%;
-  justify-content: flex-start;
-  gap: 10px;
-  color: #888;
-  border-radius: 12px;
-  padding: 10px 16px;
-}
-
-.logout-btn:hover {
-  color: #e53935;
-  background-color: #fbe9e7;
+/* ── Posts Feed ── */
+.posts-feed {
+  flex: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .sidebar {
-    width: 72px;
-    padding: 20px 8px;
-    align-items: center;
-  }
-
-  .sidebar-brand {
-    padding: 0 0 24px;
-  }
-
-  .brand-text,
-  .nav-item span,
-  .logout-btn span {
-    display: none;
-  }
-
-  .nav-item {
-    justify-content: center;
-    padding: 12px;
-  }
-
-  .create-btn span {
-    display: none;
-  }
-
-  .main-content {
-    margin-left: 72px;
+  .app-shell {
+    padding-left: 72px;
+    /* Sidebar collapsed width */
   }
 }
 
 @media (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    margin-left: 0;
-    padding: 20px 16px;
+  .app-shell {
+    padding-left: 0;
   }
 }

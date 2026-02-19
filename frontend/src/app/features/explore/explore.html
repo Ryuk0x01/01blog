@@ -1,0 +1,57 @@
+<div class="app-shell">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+    <div class="search-section">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input type="text" placeholder="Search people" [(ngModel)]="query" (keyup.enter)="search()"
+          class="search-input">
+        @if (loading()) {
+        <mat-spinner diameter="20" class="search-spinner"></mat-spinner>
+        }
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="explore-header">
+        <h2>Explore People</h2>
+      </div>
+
+      <div class="users-grid">
+        @for (u of results(); track u.id) {
+        <div class="user-card">
+          <div class="card-content">
+            <div class="avatar">{{ u.username.charAt(0).toUpperCase() }}</div>
+            <div class="user-info">
+              <span class="username">{{ u.username }}</span>
+              <span class="user-handle">@{{ u.username }}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="action-btn" (click)="viewProfile(u.id)">View</button>
+            <button class="follow-btn" [class.following]="followState()[u.id]" (click)="toggleFollow(u.id)">
+              {{ followState()[u.id] ? 'Following' : 'Follow' }}
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      @if (!results().length && !loading() && query()) {
+      <div class="no-results">
+        <mat-icon>search_off</mat-icon>
+        <p>No users found for "{{ query() }}"</p>
+      </div>
+      }
+
+      @if (!query() && !results().length) {
+      <div class="empty-state">
+        <mat-icon>people_outline</mat-icon>
+        <p>Search for users to follow</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>

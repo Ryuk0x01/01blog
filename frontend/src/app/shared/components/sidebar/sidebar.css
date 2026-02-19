@@ -1,0 +1,97 @@
+:host {
+  display: contents;
+}
+
+.sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 32px;
+  color: #1a1a1a;
+}
+
+.brand-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #3f51b5;
+}
+
+.brand-text {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 28px;
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: #f5f5f5;
+}
+
+.nav-item.active {
+  background: #e8eaf6;
+  color: #3f51b5;
+}
+
+.nav-item mat-icon {
+  font-size: 26px;
+  width: 26px;
+  height: 26px;
+}
+
+.sidebar-actions {
+  padding: 24px 0;
+}
+
+.create-btn {
+  width: 100%;
+  padding: 24px !important;
+  font-size: 16px !important;
+  border-radius: 28px !important;
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+}
+
+.sidebar-footer {
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.logout-btn {
+  width: 100%;
+  justify-content: flex-start !important;
+  color: #666;
+  font-weight: 500;
+}

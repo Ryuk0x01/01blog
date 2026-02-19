@@ -1,0 +1,200 @@
+/* ── Layout Shell ── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: #FAFAFA;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  border-left: 1px solid #DBDBDB;
+  border-right: 1px solid #DBDBDB;
+  background: white;
+  min-height: 100vh;
+}
+
+/* ── Search Section ── */
+.search-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid #DBDBDB;
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.search-container {
+  background: #EFEFEF;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-icon {
+  color: #8E8E8E;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 16px;
+  outline: none;
+  color: #262626;
+}
+
+.search-spinner {
+  margin-left: auto;
+}
+
+/* ── Content Area ── */
+.content-area {
+  padding: 24px 0;
+}
+
+.explore-header {
+  padding: 0 16px 16px;
+}
+
+.explore-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #262626;
+}
+
+/* ── Users Grid ── */
+.users-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-card {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s;
+}
+
+.user-card:hover {
+  background-color: #FAFAFA;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFC107, #FF9800);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: 600;
+  color: #262626;
+  font-size: 14px;
+}
+
+.user-handle {
+  color: #8E8E8E;
+  font-size: 14px;
+}
+
+/* ── Actions ── */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: #262626;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.action-btn:hover {
+  background: #F0F0F0;
+}
+
+.follow-btn {
+  background: #0095F6;
+  color: white;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.follow-btn:hover {
+  background: #1877F2;
+}
+
+.follow-btn.following {
+  background: #EFEFEF;
+  color: #262626;
+}
+
+.follow-btn.following:hover {
+  background: #DBDBDB;
+}
+
+/* ── Empty States ── */
+.no-results,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  color: #8E8E8E;
+  gap: 12px;
+}
+
+.no-results mat-icon,
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+}
+
+.no-results p,
+.empty-state p {
+  margin: 0;
+  font-size: 16px;
+}
