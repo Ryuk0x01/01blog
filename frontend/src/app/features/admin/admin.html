@@ -1,0 +1,141 @@
+<div class="app-shell">
+    <app-sidebar></app-sidebar>
+
+    <div class="main-content">
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <mat-icon>people</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-number">{{ stats().users }}</span>
+                    <span class="stat-label">Users</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <mat-icon>article</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-number">{{ stats().posts }}</span>
+                    <span class="stat-label">Posts</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <mat-icon>flag</mat-icon>
+                <div class="stat-info">
+                    <span class="stat-number">{{ stats().reports }}</span>
+                    <span class="stat-label">Reports</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-bar">
+            <button class="tab" [class.active]="activeTab() === 'users'" (click)="setTab('users')">
+                <mat-icon>people</mat-icon> Users
+            </button>
+            <button class="tab" [class.active]="activeTab() === 'posts'" (click)="setTab('posts')">
+                <mat-icon>article</mat-icon> Posts
+            </button>
+            <button class="tab" [class.active]="activeTab() === 'reports'" (click)="setTab('reports')">
+                <mat-icon>flag</mat-icon> Reports
+            </button>
+        </div>
+
+        @if (loading()) {
+        <div class="loading-container">
+            <mat-spinner diameter="32"></mat-spinner>
+        </div>
+        }
+
+        <!-- Users Tab -->
+        @if (!loading() && activeTab() === 'users') {
+        <div class="data-table">
+            @for (u of users(); track u.id) {
+            <div class="table-row">
+                <div class="row-info">
+                    <div class="avatar-placeholder">{{ u.username[0] | uppercase }}</div>
+                    <div class="row-details">
+                        <span class="primary-text">{{ u.username }}</span>
+                        <span class="secondary-text">{{ u.email }}</span>
+                    </div>
+                    <span class="role-badge" [class.admin]="u.role === 'ADMIN'">{{ u.role }}</span>
+                </div>
+                @if (u.role !== 'ADMIN') {
+                <div class="row-actions">
+                    <button class="ban-btn" [class.banned]="u.banned" (click)="toggleUserBan(u.id)"
+                        [title]="u.banned ? 'Unban User' : 'Ban User'">
+                        <mat-icon>{{ u.banned ? 'gavel' : 'person_off' }}</mat-icon>
+                    </button>
+                    <button class="delete-btn" (click)="deleteUser(u.id)" title="Delete User">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+                }
+            </div>
+            }
+            @if (!users().length) {
+            <div class="empty-tab">No users found</div>
+            }
+        </div>
+        }
+
+        <!-- Posts Tab -->
+        @if (!loading() && activeTab() === 'posts') {
+        <div class="data-table">
+            @for (p of posts(); track p.id) {
+            <div class="table-row">
+                <div class="row-info">
+                    <div class="row-details">
+                        <span class="primary-text">{{ p.title }}</span>
+                        <span class="secondary-text">by {{ p.authorUsername }} · {{ p.createdAt | date:'mediumDate'
+                            }}</span>
+                    </div>
+                </div>
+                <div class="row-actions">
+                    <button class="hide-btn" [class.hidden]="p.hidden" (click)="togglePostHide(p.id)"
+                        [title]="p.hidden ? 'Show Post' : 'Hide Post'">
+                        <mat-icon>{{ p.hidden ? 'visibility' : 'visibility_off' }}</mat-icon>
+                    </button>
+                    <button class="delete-btn" (click)="deletePost(p.id)" title="Delete Post">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+            }
+            @if (!posts().length) {
+            <div class="empty-tab">No posts found</div>
+            }
+        </div>
+        }
+
+        <!-- Reports Tab -->
+        @if (!loading() && activeTab() === 'reports') {
+        <div class="data-table">
+            @for (r of reports(); track r.id) {
+            <div class="table-row report-row">
+                <div class="row-info">
+                    <div class="report-icon">
+                        <mat-icon>{{ r.type === 'USER' ? 'person' : 'article' }}</mat-icon>
+                    </div>
+                    <div class="row-details">
+                        <span class="primary-text">{{ r.type }} #{{ r.targetId }}</span>
+                        <span class="secondary-text">by {{ r.reporterUsername }} · {{ r.createdAt | date:'mediumDate'
+                            }}</span>
+                        <span class="report-desc">Reason: {{ r.description }}</span>
+                    </div>
+                </div>
+                <button class="delete-btn dismiss" (click)="dismissReport(r.id)">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            }
+            @if (!reports().length) {
+            <div class="empty-tab">No reports found</div>
+            }
+        </div>
+        }
+    </div>
+</div>

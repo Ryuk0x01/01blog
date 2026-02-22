@@ -4,66 +4,76 @@
     <div class="comments-section">
 
         <!-- Post New Comment -->
-        <div class="new-comment">
-            <div class="comment-input-group">
-                <textarea class="comment-input" [(ngModel)]="newCommentContent" placeholder="Write a comment..."
+        <div class="new-comment-card">
+            <div class="comment-input-wrapper">
+                <textarea class="comment-input" [(ngModel)]="newCommentContent" placeholder="Share your thoughts..."
                     rows="2"></textarea>
 
-                <div class="input-actions">
-                    <button mat-flat-button color="primary" class="submit-btn" (click)="postComment()"
-                        [disabled]="postingComment()">
+                <div class="input-footer">
+                    @if (errorMessage()) {
+                    <span class="error-hint">{{ errorMessage() }}</span>
+                    } @else {
+                    <span class="character-count">{{ newCommentContent().length }} characters</span>
+                    }
+                    <button mat-flat-button color="primary" class="post-btn" (click)="postComment()"
+                        [disabled]="postingComment() || !newCommentContent().trim()">
                         <mat-icon>{{ postingComment() ? 'hourglass_empty' : 'send' }}</mat-icon>
                         {{ postingComment() ? 'Posting...' : 'Post' }}
                     </button>
                 </div>
             </div>
-
-            @if (errorMessage()) {
-            <div class="error-message">
-                <mat-icon>error_outline</mat-icon>
-                {{ errorMessage() }}
-            </div>
-            }
         </div>
 
         <!-- Loading -->
         @if (loadingComments()) {
-        <div class="loading">
-            <mat-spinner diameter="24"></mat-spinner>
-            <span>Loading comments...</span>
+        <div class="loading-state">
+            <mat-spinner diameter="32"></mat-spinner>
+            <span>Fetching conversations...</span>
         </div>
         } @else {
 
         <!-- No comments -->
         @if (comments().length === 0) {
-        <div class="no-comments">
-            <mat-icon>forum</mat-icon>
-            <p>No comments yet</p>
-            <span>Be the first to share your thoughts!</span>
+        <div class="empty-state">
+            <div class="empty-icon-wrapper">
+                <mat-icon>forum</mat-icon>
+            </div>
+            <h3>No comments yet</h3>
+            <p>Be the first to share your thoughts and start the discussion!</p>
         </div>
         } @else {
 
         <!-- Comments List -->
-        <div class="comments-list">
+        <div class="comments-feed">
             @for (comment of comments(); track comment.id) {
-            <div class="comment-item">
+            <div class="comment-card">
                 <div class="comment-avatar">
                     {{ comment.authorUsername.charAt(0).toUpperCase() }}
                 </div>
 
-                <div class="comment-body">
-                    <div class="comment-header">
-                        <strong class="comment-author">{{ comment.authorUsername }}</strong>
-                        <span class="comment-date">{{ comment.createdAt | date:'mediumDate' }}</span>
+                <div class="comment-container">
+                    <div class="comment-metadata">
+                        <span class="author-name">{{ comment.authorUsername }}</span>
+                        <span class="dot-separator">•</span>
+                        <span class="post-timestamp">{{ comment.createdAt | date:'mediumDate' }}</span>
+
+                        @if (auth.getUsername() === comment.authorUsername) {
+                        <button mat-icon-button class="more-options-btn" [matMenuTriggerFor]="commentMenu">
+                            <mat-icon>more_horiz</mat-icon>
+                        </button>
+                        <mat-menu #commentMenu="matMenu">
+                            <button mat-menu-item (click)="deleteComment(comment.id)" class="delete-action">
+                                <mat-icon>delete_outline</mat-icon>
+                                <span>Delete comment</span>
+                            </button>
+                        </mat-menu>
+                        }
                     </div>
 
-                    <p class="comment-content">{{ comment.content }}</p>
+                    <div class="comment-text">
+                        {{ comment.content }}
+                    </div>
                 </div>
-                @if ( auth.getUsername() === comment.authorUsername) {
-                <button mat-icon-button class="delete-btn" (click)="deleteComment(comment.id)" title="Delete comment">
-                    <mat-icon>close</mat-icon>
-                </button>
-                }
             </div>
             }
         </div>

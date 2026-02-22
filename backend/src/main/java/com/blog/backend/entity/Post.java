@@ -32,6 +32,9 @@ public class Post {
     @Column
     private String mediaUrl;
 
+    @Column(nullable = false)
+    private boolean hidden = false;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

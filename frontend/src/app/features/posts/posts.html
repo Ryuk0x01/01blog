@@ -1,7 +1,5 @@
 <!-- Main Content -->
-<main class="main-content">
-
-  <!-- Error message -->
+<main class="main-content fade-in-up">
   @if (errorMessage()) {
   <div class="error-alert">
     <mat-icon>error_outline</mat-icon>
@@ -16,6 +14,7 @@
   </div>
   }
 
+  @if (showCreateButton) {
   <div class="sidebar-actions">
     <button mat-flat-button color="primary" class="create-btn" (click)="showCreatePost.set(!showCreatePost())">
       <mat-icon>add</mat-icon>
@@ -27,6 +26,7 @@
   <div class="create-post-wrapper">
     <app-create-post></app-create-post>
   </div>
+  }
   }
 
 
@@ -74,43 +74,56 @@
     </mat-card-content>
 
     @if (editingPostId() === p.id) {
-    <div class="edit-form">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Edit title</mat-label>
-        <input matInput type="text" placeholder="Post title..." [(ngModel)]="editTitle" name="editTitle"
-          [disabled]="editing()">
-      </mat-form-field>
+    <div class="edit-zone fade-in">
+      <div class="edit-header">
+        <h3>Edit Post</h3>
+        <p>Update your post's content and media</p>
+      </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Edit content</mat-label>
-        <textarea matInput rows="3" placeholder="What's on your mind?" [(ngModel)]="editContent" name="editContent"
-          [disabled]="editing()"></textarea>
-      </mat-form-field>
+      <div class="edit-fields">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput type="text" placeholder="Something catchy..." [ngModel]="editTitle()"
+            (ngModelChange)="editTitle.set($event)" name="editTitle" [disabled]="editing()">
+        </mat-form-field>
 
-      <div class="file-input-wrapper">
-        <input type="file" #editFile class="file-input" id="editFile" (change)="onEditFileSelected($event)"
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Content</mat-label>
+          <textarea matInput rows="4" placeholder="Share your story..." [ngModel]="editContent()"
+            (ngModelChange)="editContent.set($event)" name="editContent" [disabled]="editing()"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="edit-media-section">
+        <input type="file" #editFile class="file-input-hidden" id="editFile" (change)="onEditFileSelected($event)"
           accept="image/*,video/*" [disabled]="editing()">
-        <button mat-raised-button type="button" color="primary" (click)="editFile.click()" [disabled]="editing()">
-          <mat-icon>attach_file</mat-icon>
-          Choose Image/Video
-        </button>
+
+        <div class="media-actions">
+          <button mat-stroked-button type="button" (click)="editFile.click()" [disabled]="editing()" class="media-btn">
+            <mat-icon>add_photo_alternate</mat-icon>
+            {{ editSelectedFile() ? 'Change Media' : 'Update Media' }}
+          </button>
+
+          @if (editSelectedFile()) {
+          <div class="file-badge">
+            <mat-icon>insert_drive_file</mat-icon>
+            <span>{{ editSelectedFile()!.name }}</span>
+            <button mat-icon-button (click)="editSelectedFile.set(null)" class="clear-file">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          }
+        </div>
       </div>
 
-      @if (editSelectedFile()) {
-      <div class="selected-file-alert">
-        <span>📁 {{ editSelectedFile()!.name }} ({{ (editSelectedFile()!.size / 1024 / 1024).toFixed(2) }}MB)</span>
-        <button mat-icon-button (click)="editSelectedFile.set(null)">
-          <mat-icon>close</mat-icon>
+      <div class="edit-footer">
+        <button mat-button type="button" (click)="cancelEdit()" [disabled]="editing()"
+          class="cancel-btn">Cancel</button>
+        <button mat-flat-button color="primary" type="button" (click)="saveEdit(p.id)" [disabled]="editing()"
+          class="save-btn">
+          <mat-icon>{{ editing() ? 'hourglass_empty' : 'check' }}</mat-icon>
+          {{ editing() ? 'Saving...' : 'Save Changes' }}
         </button>
-      </div>
-      }
-
-      <div class="edit-actions">
-        <button mat-raised-button color="primary" type="button" (click)="saveEdit(p.id)" [disabled]="editing()">
-          <mat-icon>{{ editing() ? 'hourglass_empty' : 'save' }}</mat-icon>
-          {{ editing() ? 'Saving...' : 'Save' }}
-        </button>
-        <button mat-button type="button" (click)="cancelEdit()" [disabled]="editing()">Cancel</button>
       </div>
     </div>
     }
@@ -138,6 +151,11 @@
       <button mat-button class="delete-btn" (click)="deletePost(p.id)">
         <mat-icon>delete</mat-icon>
         <span>Delete</span>
+      </button>
+      } @else {
+      <button mat-button class="action-btn" (click)="reportPost(p.id)">
+        <mat-icon>flag</mat-icon>
+        <span>Report</span>
       </button>
       }
     </mat-card-actions>

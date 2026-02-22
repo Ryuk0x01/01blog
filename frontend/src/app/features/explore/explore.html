@@ -6,8 +6,8 @@
     <div class="search-section">
       <div class="search-container">
         <mat-icon class="search-icon">search</mat-icon>
-        <input type="text" placeholder="Search people" [(ngModel)]="query" (keyup.enter)="search()"
-          class="search-input">
+        <input type="text" placeholder="Search people" [(ngModel)]="query" (ngModelChange)="search()"
+          class="search-input" />
         @if (loading()) {
         <mat-spinner diameter="20" class="search-spinner"></mat-spinner>
         }

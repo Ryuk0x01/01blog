@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,8 @@ import { AuthService } from '../../core/services/auth';
 import { CommentComponent } from '../comments/comment';
 import { CreatePostComponent } from '../home/creat-posts/create-post';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ReportModalComponent } from '../../shared/components/report-modal/report-modal';
 
 interface Post {
     id: number;
@@ -48,24 +50,22 @@ interface Profile {
         MatIconModule,
         MatProgressSpinnerModule,
         CommentComponent,
-        CreatePostComponent
+        CreatePostComponent,
+        MatDialogModule
     ],
     templateUrl: './posts.html',
     styleUrls: ['./posts.css']
 })
-export class postComponent {
+export class postComponent implements OnChanges {
+    @Input() userId: number | null = null;
+    @Input() showCreateButton: boolean = true;
+
     posts = signal<Post[]>([]);
     loadingPosts = signal(false);
     errorMessage = signal('');
     selectedProfile = signal<Profile | null>(null);
 
     showCreatePost = signal(false);
-
-    // Create post form
-    newPostTitle = signal('');
-    newPostContent = signal('');
-    selectedFile = signal<File | null>(null);
-    creatingPost = signal(false);
 
     // Edit post state
     editingPostId = signal<number | null>(null);
@@ -77,13 +77,14 @@ export class postComponent {
     postCommentCounts = signal<Record<number, number>>({});
     postLikesCount = signal<Record<number, number>>({});
 
-    private postsApi = 'http://localhost:8080/api/posts';
+    private postsApi = '/api/posts';
 
 
     constructor(
         public auth: AuthService,
         private http: HttpClient,
-        private router: Router
+        private router: Router,
+        private dialog: MatDialog
     ) { }
 
 
@@ -92,18 +93,28 @@ export class postComponent {
         this.loadPosts();
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['userId'] && !changes['userId'].firstChange) {
+            this.loadPosts();
+        }
+    }
+
 
     loadPosts(): void {
         this.loadingPosts.set(true);
         this.errorMessage.set('');
 
-        this.http.get<any>(this.postsApi, this.auth.authHeaders())
+        const url = this.userId
+            ? `/api/posts/user/${this.userId}`
+            : `${this.postsApi}/feed`;
+
+        this.http.get<any>(url, this.auth.authHeaders())
             .subscribe({
                 next: res => {
                     const data = Array.isArray(res?.data) ? res.data : [];
                     this.posts.set(data);
                     this.loadingPosts.set(false);
-                    console.log('Posts loaded:', data);
+                    console.log('Posts loaded: ---- >> ', data);
 
                     // Initialize likes and comment counts
                     const likes: Record<number, boolean> = {};
@@ -190,7 +201,6 @@ export class postComponent {
         const content = this.editContent();
         const file = this.editSelectedFile();
 
-        let request$;
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -198,25 +208,25 @@ export class postComponent {
         if (file) {
             formData.append('file', file);
         }
-        request$ = this.http.put<any>(`${this.postsApi}/${postId}`, formData, this.auth.authHeaders());
 
-        request$.subscribe({
-            next: res => {
-                const updated = res?.data || { id: postId, title, content };
-                const updatedPosts = this.posts().map(p => p.id === postId ? { ...p, title: updated.title, content: updated.content, mediaUrl: updated.mediaUrl ?? p.mediaUrl, updatedAt: updated.updatedAt ?? p.updatedAt } : p);
-                this.posts.set(updatedPosts);
-                this.cancelEdit();
-            },
-            error: err => {
-                if (err.status === 401) {
-                    this.auth.logout();
-                    this.router.navigate(['/auth/login']);
-                    return;
+        this.http.put<any>(`${this.postsApi}/${postId}`, formData, this.auth.authHeaders())
+            .subscribe({
+                next: res => {
+                    const updated = res?.data || { id: postId, title, content };
+                    const updatedPosts = this.posts().map(p => p.id === postId ? { ...p, title: updated.title, content: updated.content, mediaUrl: updated.mediaUrl ?? p.mediaUrl, updatedAt: updated.updatedAt ?? p.updatedAt } : p);
+                    this.posts.set(updatedPosts);
+                    this.cancelEdit();
+                },
+                error: err => {
+                    if (err.status === 401) {
+                        this.auth.logout();
+                        this.router.navigate(['/auth/login']);
+                        return;
+                    }
+                    this.errorMessage.set('Failed to update post');
+                    this.editing.set(false);
                 }
-                this.errorMessage.set('Failed to update post');
-                this.editing.set(false);
-            }
-        });
+            });
     }
 
     deletePost(postId: number): void {
@@ -237,5 +247,12 @@ export class postComponent {
                     this.errorMessage.set('Failed to delete post');
                 }
             });
+    }
+
+    reportPost(postId: number): void {
+        this.dialog.open(ReportModalComponent, {
+            width: '400px',
+            data: { targetId: postId, type: 'POST' }
+        });
     }
 }

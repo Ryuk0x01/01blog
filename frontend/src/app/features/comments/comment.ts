@@ -6,6 +6,7 @@ import { AuthService } from '../../core/services/auth';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 interface Comment {
@@ -21,7 +22,7 @@ interface Comment {
 @Component({
     selector: 'app-comment',
     standalone: true,
-    imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+    imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatMenuModule],
     templateUrl: './comment.html',
     styleUrls: ['./comment.css']
 })

@@ -39,6 +39,9 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    @Column(nullable = false)
+    private boolean banned = false;
+
     @OneToMany(mappedBy = "following", cascade = CascadeType.REMOVE)
     private List<UserFollow> followers;
 

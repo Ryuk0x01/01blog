@@ -12,6 +12,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar';
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-explore',
@@ -32,7 +34,12 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './explore.html',
   styleUrls: ['./explore.css']
 })
+
+
 export class ExploreComponent {
+
+  private searchSubject = new Subject<string>();
+
   query = signal('');
   results = signal<Array<{ id: number; username: string }>>([]);
   loading = signal(false);
@@ -42,30 +49,45 @@ export class ExploreComponent {
     private auth: AuthService,
     private router: Router,
     private http: HttpClient
-  ) { }
+  ) {
+    this.searchSubject
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(query => {
+        this.performSearch(query);
+      });
+
+  }
 
   search(): void {
-    if (!this.query().trim()) return;
+    this.searchSubject.next(this.query());
+  }
+
+  private performSearch(query: string): void {
+    if (!query.trim()) {
+      this.results.set([]);
+      return;
+    }
 
     this.loading.set(true);
-    this.http.get<any[]>(`/api/users/search?query=${this.query()}`, this.auth.authHeaders())
+
+    this.http.get<any[]>(`/api/users/search?query=${query}`, this.auth.authHeaders())
       .subscribe({
         next: (users) => {
           this.results.set(users);
           this.loading.set(false);
 
-          // Initialize follow state (mock)
           const map: Record<number, boolean> = {};
           users.forEach(u => (map[u.id] = false));
           this.followState.set(map);
         },
-        error: (err) => {
-          console.error('Search failed', err);
+        error: () => {
           this.loading.set(false);
         }
       });
   }
-
   toggleFollow(userId: number) {
     const s = { ...this.followState() };
     s[userId] = !s[userId];

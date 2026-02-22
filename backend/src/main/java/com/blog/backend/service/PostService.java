@@ -5,9 +5,11 @@ import com.blog.backend.dto.PostResponseDTO;
 import com.blog.backend.entity.Post;
 import com.blog.backend.entity.ReactionType;
 import com.blog.backend.entity.User;
+import com.blog.backend.entity.UserFollow;
 import com.blog.backend.repository.CommentRepository;
 import com.blog.backend.repository.PostReactionRepository;
 import com.blog.backend.repository.PostRepository;
+import com.blog.backend.repository.UserFollowRepository;
 import com.blog.backend.repository.UserRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -27,14 +29,18 @@ public class PostService {
 
     private final PostReactionRepository postReactionRepository;
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
+    private final UserFollowRepository userFollowRepository;
 
     private final String uploadDir = "uploads/";
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, PostReactionRepository postReactionRepository, CommentRepository commentRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PostReactionRepository postReactionRepository, CommentRepository commentRepository, NotificationService notificationService, UserFollowRepository userFollowRepository) {
         this.postRepository = postRepository;
         this.postReactionRepository = postReactionRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
+        this.userFollowRepository = userFollowRepository;
     }
 
     // Create post → any user
@@ -67,6 +73,7 @@ public class PostService {
         }
 
         postRepository.save(post);
+        notificationService.notifyFollowers(author, post.getId());
         return convertToDTO(post, userEmail);
     }
 
@@ -74,9 +81,35 @@ public class PostService {
     public List<PostResponseDTO> getAllPosts(String userEmail) {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDTO> dtoList = posts.stream()
+                .filter(post -> !post.isHidden())
                 .map(post -> convertToDTO(post, userEmail))
                 .toList();
         return dtoList;
+    }
+
+    // Get posts by user
+    public List<PostResponseDTO> getPostsByUser(Long userId, String viewerEmail) {
+        User author = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        List<Post> posts = postRepository.findAllByAuthor(author);
+        return posts.stream()
+                .filter(post -> !post.isHidden() || author.getEmail().equals(viewerEmail))
+                .map(post -> convertToDTO(post, viewerEmail))
+                .toList();
+    }
+
+    // Get feed posts (from followed users + self)
+    public List<PostResponseDTO> getFeedPosts(String userEmail) {
+        User currentUser = userRepository.findByEmail(userEmail);
+        List<UserFollow> following = userFollowRepository.findByFollower(currentUser);
+        List<User> authors = new java.util.ArrayList<>();
+        authors.add(currentUser);
+        following.forEach(f -> authors.add(f.getFollowing()));
+        List<Post> posts = postRepository.findByAuthorInOrderByCreatedAtDesc(authors);
+        return posts.stream()
+                .filter(post -> !post.isHidden() || post.getAuthor().getEmail().equals(userEmail))
+                .map(post -> convertToDTO(post, userEmail))
+                .toList();
     }
 
     // Get single post → public
@@ -143,6 +176,7 @@ public class PostService {
         dto.setId(post.getId());
         dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
+        dto.setAuthorId(post.getAuthor().getId());
         dto.setAuthorUsername(post.getAuthor().getUsername());
         dto.setMediaUrl(post.getMediaUrl());
         dto.setCreatedAt(post.getCreatedAt());

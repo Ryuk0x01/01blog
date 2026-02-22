@@ -39,6 +39,22 @@ public class PostController {
         return ResponseEntity.ok(Map.of("status", "success", "data", posts));
     }
 
+    // Get feed posts (from followed users + self)
+    @GetMapping("/feed")
+    public ResponseEntity<?> getFeedPosts(Authentication auth) {
+        String email = (String) auth.getPrincipal();
+        List<PostResponseDTO> posts = postService.getFeedPosts(email);
+        return ResponseEntity.ok(Map.of("status", "success", "data", posts));
+    }
+
+    // Get posts by user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getPostsByUser(@PathVariable Long userId, Authentication auth) {
+        String email = (String) auth.getPrincipal();
+        List<PostResponseDTO> posts = postService.getPostsByUser(userId, email);
+        return ResponseEntity.ok(Map.of("status", "success", "data", posts));
+    }
+
     // Get single post → public
     @GetMapping("/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id, Authentication auth) {

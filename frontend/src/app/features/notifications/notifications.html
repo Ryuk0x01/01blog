@@ -1,0 +1,47 @@
+<div class="app-shell">
+    <app-sidebar></app-sidebar>
+
+    <div class="main-content">
+        <div class="notifications-header">
+            <h1>Notifications</h1>
+            @if (notifications().length) {
+            <button class="mark-all-btn" (click)="markAllAsRead()">
+                <mat-icon>done_all</mat-icon>
+                Mark all as read
+            </button>
+            }
+        </div>
+
+        @if (loading()) {
+        <div class="loading-container">
+            <mat-spinner diameter="32"></mat-spinner>
+        </div>
+        }
+
+        @if (!loading() && notifications().length) {
+        <div class="notifications-list">
+            @for (n of notifications(); track n.id) {
+            <div class="notification-item" [class.unread]="!n.read" (click)="onNotificationClick(n)">
+                <div class="notif-icon" [class.follow]="n.type === 'FOLLOW'" [class.post]="n.type === 'NEW_POST'">
+                    <mat-icon>{{ getIcon(n.type) }}</mat-icon>
+                </div>
+                <div class="notif-body">
+                    <p class="notif-message">{{ n.message }}</p>
+                    <span class="notif-time">{{ n.createdAt | date:'medium' }}</span>
+                </div>
+                @if (!n.read) {
+                <div class="unread-dot"></div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+        @if (!loading() && !notifications().length) {
+        <div class="empty-state">
+            <mat-icon>notifications_none</mat-icon>
+            <p>No notifications yet</p>
+        </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="app-shell">
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
+
+    <div class="main-content">
+
+        <!-- Loading State -->
+        @if (loading()) {
+        <div class="loading-container">
+            <mat-spinner diameter="36"></mat-spinner>
+            <p>Loading profile...</p>
+        </div>
+        }
+
+        @if (profile(); as p) {
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ getInitial(p.username) }}
+            </div>
+
+            <div class="profile-info">
+                <div class="profile-name-row">
+                    <h1 class="profile-username">{{ p.username }}</h1>
+                    @if (!isOwnProfile()) {
+                    <button class="follow-btn" [class.following]="p.following" (click)="toggleFollow()"
+                        [disabled]="followLoading()">
+                        @if (followLoading()) {
+                        <mat-spinner diameter="16"></mat-spinner>
+                        } @else {
+                        {{ p.following ? 'Following' : 'Follow' }}
+                        }
+                    </button>
+                    <button class="report-btn" (click)="openReport()" title="Report User">
+                        <mat-icon>flag</mat-icon>
+                    </button>
+                    }
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="stat-value">{{ p.postsCount }}</span>
+                        <span class="stat-label">posts</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ p.followersCount }}</span>
+                        <span class="stat-label">followers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ p.followingCount }}</span>
+                        <span class="stat-label">following</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="section-divider">
+            <mat-icon>grid_on</mat-icon>
+            <span>Posts</span>
+        </div>
+
+        <!-- Posts Feed -->
+        <app-posts [userId]="userId" [showCreateButton]="isOwnProfile()"></app-posts>
+        }
+
+    </div>
+</div>

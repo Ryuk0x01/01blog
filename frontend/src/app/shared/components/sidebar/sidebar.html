@@ -13,11 +13,22 @@
       <mat-icon>explore</mat-icon>
       <span>Explore</span>
     </a>
-    <a class="nav-item">
-      <mat-icon>notifications_none</mat-icon>
+    <a class="nav-item" routerLink="/notifications" routerLinkActive="active">
+      <div class="icon-wrapper">
+        <mat-icon>notifications_none</mat-icon>
+        @if (unreadNotifications() > 0) {
+        <span class="badge">{{ unreadNotifications() }}</span>
+        }
+      </div>
       <span>Notifications</span>
     </a>
-    <a class="nav-item">
+    @if (isAdmin()) {
+    <a class="nav-item" routerLink="/admin" routerLinkActive="active">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Admin</span>
+    </a>
+    }
+    <a class="nav-item" [routerLink]="'/profile/' + currentUserId()" routerLinkActive="active">
       <mat-icon>person_outline</mat-icon>
       <span>Profile</span>
     </a>

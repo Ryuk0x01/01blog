@@ -66,6 +66,10 @@ public class AuthService {
             throw new RuntimeException("Invalid email or password");
         }
 
+        if (user.isBanned()) {
+            throw new RuntimeException("This account has been banned");
+        }
+
         return jwtUtil.generateToken(user);
     }
 

@@ -32,13 +32,13 @@ export class CreatePostComponent {
   creatingPost = signal(false);
   errorMessage = signal('');
 
-  private postsApi = 'http://localhost:8080/api/posts';
+  private postsApi = '/api/posts';
 
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private post: postComponent
-  ) {}
+  ) { }
 
 
   createPost() {
@@ -65,7 +65,7 @@ export class CreatePostComponent {
           this.newPostContent.set('');
           this.selectedFile.set(null);
           this.creatingPost.set(false);
-          this.post.loadPosts();          
+          this.post.loadPosts();
         },
         error: err => {
           this.creatingPost.set(false);
