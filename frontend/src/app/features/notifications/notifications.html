@@ -22,7 +22,8 @@
         <div class="notifications-list">
             @for (n of notifications(); track n.id) {
             <div class="notification-item" [class.unread]="!n.read" (click)="onNotificationClick(n)">
-                <div class="notif-icon" [class.follow]="n.type === 'FOLLOW'" [class.post]="n.type === 'NEW_POST'">
+                <div class="notif-icon" [class.follow]="n.type === 'FOLLOW'" [class.post]="n.type === 'NEW_POST'"
+                    [class.like]="n.type === 'LIKE'" [class.comment]="n.type === 'COMMENT'">
                     <mat-icon>{{ getIcon(n.type) }}</mat-icon>
                 </div>
                 <div class="notif-body">

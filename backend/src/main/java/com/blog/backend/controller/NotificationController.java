@@ -28,15 +28,18 @@ public class NotificationController {
     public ResponseEntity<?> getNotifications(Authentication auth) {
         List<Notification> notifications = notificationService.getNotifications(auth.getName());
         // Map to safe response (avoid circular refs)
-        var data = notifications.stream().map(n -> Map.of(
-                "id", n.getId(),
-                "actorUsername", n.getActorUsername(),
-                "type", n.getType().name(),
-                "message", n.getMessage(),
-                "referenceId", n.getReferenceId() != null ? n.getReferenceId() : 0,
-                "read", n.isRead(),
-                "createdAt", n.getCreatedAt().toString()
-        )).toList();
+        var data = notifications.stream().map(n -> {
+            Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", n.getId());
+            map.put("actorUsername", n.getActorUsername());
+            map.put("type", n.getType().name());
+            map.put("message", n.getMessage());
+            map.put("referenceId", n.getReferenceId() != null ? n.getReferenceId() : 0);
+            map.put("read", n.isRead());
+            map.put("createdAt", n.getCreatedAt() != null ? n.getCreatedAt().toString() : "");
+            return map;
+        }).toList();
+
         return ResponseEntity.ok(Map.of("data", data));
     }
 

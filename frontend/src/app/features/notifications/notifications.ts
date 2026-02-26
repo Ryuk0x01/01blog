@@ -16,6 +16,7 @@ interface NotificationItem {
     referenceId: number;
     read: boolean;
     createdAt: string;
+    actorId?: number; // Added to help with navigation
 }
 
 @Component({
@@ -96,10 +97,23 @@ export class NotificationsComponent implements OnInit {
         }
         if (n.type === 'FOLLOW') {
             this.router.navigate(['/profile', n.referenceId]);
+        } else if (n.type === 'NEW_POST') {
+            // Navigate to the post if we had a post detail page, 
+            // but since we don't, we go to home or the author's profile
+            this.router.navigate(['/home']);
+        } else if (n.type === 'LIKE' || n.type === 'COMMENT') {
+            // Navigate to the post reference
+            this.router.navigate(['/home']);
         }
     }
 
     getIcon(type: string): string {
-        return type === 'NEW_POST' ? 'article' : 'person_add';
+        switch (type) {
+            case 'NEW_POST': return 'article';
+            case 'FOLLOW': return 'person_add';
+            case 'LIKE': return 'favorite';
+            case 'COMMENT': return 'chat_bubble';
+            default: return 'notifications';
+        }
     }
 }

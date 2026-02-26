@@ -58,7 +58,7 @@
                 <div class="row-info">
                     <div class="avatar-placeholder">{{ u.username[0] | uppercase }}</div>
                     <div class="row-details">
-                        <span class="primary-text">{{ u.username }}</span>
+                        <span class="primary-text">{{ u.username }} </span>
                         <span class="secondary-text">{{ u.email }}</span>
                     </div>
                     <span class="role-badge" [class.admin]="u.role === 'ADMIN'">{{ u.role }}</span>
@@ -90,7 +90,7 @@
                 <div class="row-info">
                     <div class="row-details">
                         <span class="primary-text">{{ p.title }}</span>
-                        <span class="secondary-text">by {{ p.authorUsername }} · {{ p.createdAt | date:'mediumDate'
+                        <span class="secondary-text"> by {{ p.authorUsername }} · {{ p.createdAt | date:'mediumDate'
                             }}</span>
                     </div>
                 </div>
@@ -121,7 +121,9 @@
                         <mat-icon>{{ r.type === 'USER' ? 'person' : 'article' }}</mat-icon>
                     </div>
                     <div class="row-details">
-                        <span class="primary-text">{{ r.type }} #{{ r.targetId }}</span>
+                        <span class="report-title">
+                            Reported {{ r.type === 'USER' ? 'User: ' + r.targetName : 'Post: ' + r.targetName }}
+                        </span>
                         <span class="secondary-text">by {{ r.reporterUsername }} · {{ r.createdAt | date:'mediumDate'
                             }}</span>
                         <span class="report-desc">Reason: {{ r.description }}</span>

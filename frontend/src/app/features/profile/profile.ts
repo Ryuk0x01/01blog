@@ -133,7 +133,7 @@ export class ProfileComponent implements OnInit {
 
     openReport(): void {
         this.dialog.open(ReportModalComponent, {
-            data: { targetId: this.userId }
+            data: { targetId: this.userId, type: 'USER' }
         });
     }
 

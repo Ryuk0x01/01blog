@@ -18,13 +18,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
 
     public CommentService(CommentRepository commentRepository,
             UserRepository userRepository,
-            PostRepository postRepository) {
+            PostRepository postRepository,
+            NotificationService notificationService) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.notificationService = notificationService;
     }
 
     public CommentResponseDTO addComment(Long postId, String content, String userEmail) {
@@ -38,6 +41,7 @@ public class CommentService {
         comment.setPost(post);
 
         commentRepository.save(comment);
+        notificationService.notifyComment(author, comment);
 
         return convertToDTO(comment);
     }

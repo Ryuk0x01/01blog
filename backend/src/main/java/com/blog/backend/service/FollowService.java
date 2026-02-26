@@ -6,7 +6,6 @@ import com.blog.backend.entity.User;
 import com.blog.backend.entity.UserFollow;
 import com.blog.backend.repository.UserFollowRepository;
 import com.blog.backend.repository.UserRepository;
-import com.blog.backend.service.NotificationService;
 
 
 @Service

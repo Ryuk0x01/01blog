@@ -78,4 +78,25 @@ public class NotificationService {
         n.setReferenceId(follower.getId());
         notificationRepository.save(n);
     }
+    public void notifyLike(User actor, com.blog.backend.entity.Post post) {
+        if (actor.getId().equals(post.getAuthor().getId())) return;
+        Notification n = new Notification();
+        n.setRecipient(post.getAuthor());
+        n.setActorUsername(actor.getUsername());
+        n.setType(NotificationType.LIKE);
+        n.setMessage(actor.getUsername() + " liked your post: " + post.getTitle());
+        n.setReferenceId(post.getId());
+        notificationRepository.save(n);
+    }
+
+    public void notifyComment(User actor, com.blog.backend.entity.Comment comment) {
+        if (actor.getId().equals(comment.getPost().getAuthor().getId())) return;
+        Notification n = new Notification();
+        n.setRecipient(comment.getPost().getAuthor());
+        n.setActorUsername(actor.getUsername());
+        n.setType(NotificationType.COMMENT);
+        n.setMessage(actor.getUsername() + " commented on your post: " + comment.getPost().getTitle());
+        n.setReferenceId(comment.getPost().getId());
+        notificationRepository.save(n);
+    }
 }

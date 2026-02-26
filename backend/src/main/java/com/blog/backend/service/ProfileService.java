@@ -26,8 +26,9 @@ public class ProfileService {
         User profileUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Long postsCount = postRepository.countByAuthor(profileUser);
-        Long followerCount = userFollowRepository.countByFollower(profileUser);
-        Long followingCount = userFollowRepository.countByFollowing(profileUser);
+        Long followerCount = userFollowRepository.countByFollowing(profileUser);
+        Long followingCount = userFollowRepository.countByFollower(profileUser);
+
         boolean isFollowing = false;
 
         if (viewerEmail != null) {

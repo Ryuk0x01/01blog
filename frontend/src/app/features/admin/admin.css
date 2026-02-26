@@ -175,6 +175,53 @@
     color: white;
 }
 
+/* ── Reports ── */
+.report-row .row-info {
+    gap: 20px;
+}
+
+.report-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff1f2;
+    color: #e11d48;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-title {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.report-desc {
+    display: block;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-left: 3px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.delete-btn.dismiss {
+    background: #f1f5f9;
+    color: var(--text-muted);
+}
+
+.delete-btn.dismiss:hover {
+    background: var(--text-main);
+    color: white;
+}
+
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;

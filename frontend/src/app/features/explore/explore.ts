@@ -43,7 +43,7 @@ export class ExploreComponent {
   query = signal('');
   results = signal<Array<{ id: number; username: string }>>([]);
   loading = signal(false);
-  followState = signal<Record<number, boolean>>({});
+  // followState = signal<Record<number, boolean>>({});
 
   constructor(
     private auth: AuthService,
@@ -79,19 +79,14 @@ export class ExploreComponent {
           this.results.set(users);
           this.loading.set(false);
 
-          const map: Record<number, boolean> = {};
-          users.forEach(u => (map[u.id] = false));
-          this.followState.set(map);
+          // const map: Record<number, boolean> = {};
+          // users.forEach(u => (map[u.id] = false));
+          // this.followState.set(map);
         },
         error: () => {
           this.loading.set(false);
         }
       });
-  }
-  toggleFollow(userId: number) {
-    const s = { ...this.followState() };
-    s[userId] = !s[userId];
-    this.followState.set(s);
   }
 
   viewProfile(id: number): void {

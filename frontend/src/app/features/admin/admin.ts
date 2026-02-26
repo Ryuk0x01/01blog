@@ -30,6 +30,7 @@ interface AdminReport {
     reporterUsername: string;
     type: string;
     targetId: number;
+    targetName: string;
     description: string;
     createdAt: string;
 }

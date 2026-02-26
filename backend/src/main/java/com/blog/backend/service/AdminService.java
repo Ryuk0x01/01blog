@@ -80,12 +80,32 @@ public class AdminService {
     }
 
     public List<Map<String, Object>> getAllReports() {
-        return reportRepository.findAll().stream().map(r -> {
+        return reportRepository.findAll().stream()
+                .sorted((r1, r2) -> {
+                    if (r1.getCreatedAt() == null) return 1;
+                    if (r2.getCreatedAt() == null) return -1;
+                    return r2.getCreatedAt().compareTo(r1.getCreatedAt());
+                })
+                .map(r -> {
             Map<String, Object> map = new java.util.LinkedHashMap<>();
             map.put("id", r.getId());
             map.put("reporterUsername", r.getReporter().getUsername());
             map.put("type", r.getType().name());
             map.put("targetId", r.getTargetId());
+
+            String targetName = "Unknown";
+            if (r.getType() == com.blog.backend.entity.ReportType.USER) {
+                targetName = userRepository.findById(r.getTargetId())
+                    .map(User::getUsername)
+                    .orElse("Deleted User (" + r.getTargetId() + ")");
+            } else if (r.getType() == com.blog.backend.entity.ReportType.POST) {
+                targetName = postRepository.findById(r.getTargetId())
+                    .map(Post::getTitle)
+                    .orElse("Deleted Post (" + r.getTargetId() + ")");
+            }
+            map.put("targetName", targetName);
+
+
             map.put("description", r.getDescription());
             map.put("createdAt", r.getCreatedAt() != null ? r.getCreatedAt().toString() : null);
             return map;

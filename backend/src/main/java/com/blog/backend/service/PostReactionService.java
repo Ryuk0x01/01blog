@@ -14,15 +14,18 @@ public class PostReactionService {
     private final PostReactionRepository reactionRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public PostReactionService(
             PostReactionRepository reactionRepository,
             PostRepository postRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            NotificationService notificationService
     ) {
         this.reactionRepository = reactionRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public void react(Long postId, String email, ReactionType type) {
@@ -50,6 +53,10 @@ public class PostReactionService {
             reaction.setPost(post);
             reaction.setType(type);
             reactionRepository.save(reaction);
+            
+            if (type == ReactionType.LIKE) {
+                notificationService.notifyLike(user, post);
+            }
         }
     }
 }

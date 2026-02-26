@@ -104,6 +104,16 @@
     color: white;
 }
 
+.notif-icon.like {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+    color: white;
+}
+
+.notif-icon.comment {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
 .notif-body {
     flex: 1;
     display: flex;
