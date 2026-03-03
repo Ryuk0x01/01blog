@@ -50,4 +50,7 @@ public class User {
 
     @OneToMany(mappedBy = "reporter", cascade = CascadeType.REMOVE)
     private List<Report> reports;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Post> posts;
 }
