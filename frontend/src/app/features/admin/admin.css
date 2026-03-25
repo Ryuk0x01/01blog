@@ -36,6 +36,20 @@
     letter-spacing: -1px;
 }
 
+.avatar-placeholder {
+  background: var(--primary-gradient);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: var(--shadow-md);
+}
+
 /* ── Stats Grid ── */
 .stats-grid {
     display: grid;
