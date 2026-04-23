@@ -14,6 +14,7 @@ import { CreatePostComponent } from '../home/creat-posts/create-post';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ReportModalComponent } from '../../shared/components/report-modal/report-modal';
+import { NotificationService } from '../../core/services/notification';
 
 interface Post {
     id: number;
@@ -84,7 +85,8 @@ export class postComponent implements OnChanges {
         public auth: AuthService,
         private http: HttpClient,
         private router: Router,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private notification: NotificationService
     ) { }
 
 
@@ -145,6 +147,7 @@ export class postComponent implements OnChanges {
         this.http.post<any>(`${this.postsApi}/${postId}/like`, {}, this.auth.authHeaders())
             .subscribe({
                 next: () => {
+                    this.notification.success("Like action successful");
 
                     const likes = { ...this.postLikes() };
                     const likesCount = { ...this.postLikesCount() };
@@ -212,6 +215,9 @@ export class postComponent implements OnChanges {
         this.http.put<any>(`${this.postsApi}/${postId}`, formData, this.auth.authHeaders())
             .subscribe({
                 next: res => {
+
+                    this.notification.success("Post updated successfully");
+
                     const updated = res?.data || { id: postId, title, content };
                     const updatedPosts = this.posts().map(p => p.id === postId ? { ...p, title: updated.title, content: updated.content, mediaUrl: updated.mediaUrl ?? p.mediaUrl, updatedAt: updated.updatedAt ?? p.updatedAt } : p);
                     this.posts.set(updatedPosts);
@@ -237,6 +243,7 @@ export class postComponent implements OnChanges {
                 next: () => {
                     const remaining = this.posts().filter(p => p.id !== postId);
                     this.posts.set(remaining);
+                    this.notification.success("Post deleted successfully");
                 },
                 error: err => {
                     if (err.status === 401) {

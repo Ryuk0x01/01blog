@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReportModalComponent } from '../../shared/components/report-modal/report-modal';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar';
 import { postComponent } from '../posts/posts';
+import { NotificationService } from '../../core/services/notification';
 
 interface ProfileData {
     id: number;
@@ -50,7 +51,8 @@ export class ProfileComponent implements OnInit {
         private router: Router,
         private http: HttpClient,
         private auth: AuthService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private notification: NotificationService
     ) {
         this.currentUserId.set(this.auth.getUserId());
     }
@@ -107,6 +109,7 @@ export class ProfileComponent implements OnInit {
                             followersCount: p.followersCount - 1
                         });
                         this.followLoading.set(false);
+                        this.notification.success("Unfollowed successfully");
                     },
                     error: () => this.followLoading.set(false)
                 });
@@ -121,6 +124,7 @@ export class ProfileComponent implements OnInit {
                             followersCount: p.followersCount + 1
                         });
                         this.followLoading.set(false);
+                        this.notification.success("Followed successfully");
                     },
                     error: () => this.followLoading.set(false)
                 });

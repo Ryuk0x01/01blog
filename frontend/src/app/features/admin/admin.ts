@@ -130,6 +130,7 @@ export class AdminComponent implements OnInit {
     }
 
     toggleUserBan(id: number): void {
+         if (!confirm('Are you sure you want to ban this user?')) return;
         this.http.put<any>(`/api/admin/users/${id}/ban`, {}, this.auth.authHeaders()).subscribe({
             next: () => {
                 this.users.set(this.users().map(u => u.id === id ? { ...u, banned: !u.banned } : u));
@@ -148,6 +149,7 @@ export class AdminComponent implements OnInit {
     }
 
     togglePostHide(id: number): void {
+        if (!confirm('Are you sure you want to hide this post?')) return;
         this.http.put<any>(`/api/admin/posts/${id}/hide`, {}, this.auth.authHeaders()).subscribe({
             next: () => {
                 this.posts.set(this.posts().map(p => p.id === id ? { ...p, hidden: !p.hidden } : p));

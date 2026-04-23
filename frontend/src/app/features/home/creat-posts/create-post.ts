@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../../core/services/auth';
 import { postComponent } from '../../posts/posts';
+import { NotificationService } from '../../../core/services/notification';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class CreatePostComponent {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private post: postComponent
+    private post: postComponent,
+    private notification: NotificationService
   ) { }
 
 
@@ -61,6 +63,9 @@ export class CreatePostComponent {
     this.http.post(this.postsApi, formData, this.auth.authHeaders())
       .subscribe({
         next: () => {
+
+          this.notification.success("Post created successfully");
+
           this.newPostTitle.set('');
           this.newPostContent.set('');
           this.selectedFile.set(null);
@@ -68,6 +73,9 @@ export class CreatePostComponent {
           this.post.loadPosts();
         },
         error: err => {
+
+          this.notification.error("Failed to create post");
+
           this.creatingPost.set(false);
           this.errorMessage.set(
             err?.error?.message || 'Failed to create post'

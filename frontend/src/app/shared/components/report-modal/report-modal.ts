@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth';
+import { NotificationService } from '../../../core/services/notification';
 
 @Component({
   selector: 'app-report-modal',
@@ -51,7 +52,8 @@ export class ReportModalComponent {
     public dialogRef: MatDialogRef<ReportModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { targetId: number, type: 'USER' | 'POST' },
     private http: HttpClient,
-    private auth: AuthService
+    private auth: AuthService,
+    private notification: NotificationService
   ) { }
 
   submitReport(): void {
@@ -71,6 +73,7 @@ export class ReportModalComponent {
         next: () => {
           this.loading.set(false);
           this.dialogRef.close(true);
+          this.notification.success("Report submitted successfully");
         },
         error: (err) => {
           this.loading.set(false);

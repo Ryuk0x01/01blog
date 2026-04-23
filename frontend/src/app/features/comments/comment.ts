@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { NotificationService } from '../../core/services/notification';
 
 
 interface Comment {
@@ -40,7 +41,8 @@ export class CommentComponent {
 
     constructor(
         private http: HttpClient,
-        public auth: AuthService
+        public auth: AuthService,
+        private notification: NotificationService
     ) {
         effect(() => {
             const id = this.postId();
@@ -101,6 +103,7 @@ export class CommentComponent {
                     this.postingComment.set(false);
                     this.errorMessage.set('');
                     this.loadComments();
+                    this.notification.success("Comment posted successfully");
                 },
                 error: err => {
                     if (err.status === 401) {
@@ -128,6 +131,7 @@ export class CommentComponent {
             .subscribe({
                 next: () => {
                     this.loadComments();
+                    this.notification.success("Comment deleted successfully");
                 },
                 error: err => {
                     if (err.status === 401) {

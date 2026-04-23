@@ -99,3 +99,25 @@ button {
 .staggered-3 {
     animation-delay: 0.3s;
 }
+
+
+
+.success-snackbar {
+  --mdc-snackbar-container-color: #10b981 !important;
+  --mat-mdc-snack-bar-button-color: #ffffff !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+
+  border-radius: 14px !important;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25);
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #ef4444 !important;
+  --mat-mdc-snack-bar-button-color: #ffffff !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+
+  border-radius: 14px !important;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.25);
+}
